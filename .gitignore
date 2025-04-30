@@ -2,5 +2,5 @@
 *.avi
 *.mp3
 *.wav
-
+node_modules/
 *.DS_Store
