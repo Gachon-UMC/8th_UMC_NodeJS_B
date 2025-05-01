@@ -9,6 +9,10 @@ export const storeMission = async (data) => {
         reward: data.reward,
     });
 
+    if (missionId === null) {
+        throw new Error("가게가 존재하지 않습니다.");
+    }
+
     const mission = await getMission(missionId);
 
     return responseFromMission(mission);
