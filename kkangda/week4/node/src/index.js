@@ -2,6 +2,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import { handleUserSignUp } from "./controllers/user.controller.js";
+import { handleStoreReview } from "./controllers/store.review.controller.js";
 
 dotenv.config();
 
@@ -17,11 +18,11 @@ app.get("/", (req, res) => {
     res.send("Hello World!");
 });
 
-<<<<<<< HEAD
-=======
 app.post("/api/v1/users/signup", handleUserSignUp);
 
->>>>>>> 00c6d17 (회원가입 기능 구현)
+app.post("/stores/1/reviews", handleStoreReview);
+
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 });
+>>>>>>> f50c8ea (feat: add review api)
