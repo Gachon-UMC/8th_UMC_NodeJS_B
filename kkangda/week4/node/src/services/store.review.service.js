@@ -9,6 +9,10 @@ export const storeReview = async (data) => {
         content: data.content,
     });
 
+    if (reviewId === null) {
+        throw new Error("가게가 존재하지 않습니다.");
+    }
+
     const review = await getReview(reviewId);
 
     return responseFromReview(review);
