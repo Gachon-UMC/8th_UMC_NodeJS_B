@@ -7,7 +7,7 @@ export const addChallenge = async (data) => {
             [data.missionId, data.userId]
         );
 
-        if (confirm[0].isExistEmail) {
+        if (confirm[0].isExistChallenge) {
             return null;
         }
 
