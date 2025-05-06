@@ -55,7 +55,11 @@ export const handleAddReview = async (req, res) => {
 export const handleStoreReviewList = async (req, res) => {
     console.log("리뷰 목록 요청했습니다.");
     const storeId = req.params.storeid;
-    console.log(storeId);
-    const reviewList = await getStoreReviewList(storeId);
+    // console.log(storeId);
+    const reviewList = await getStoreReviewList(
+        parseInt(storeId),
+        typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0
+    );
+
     res.status(StatusCodes.OK).json({ result: reviewList });
 };

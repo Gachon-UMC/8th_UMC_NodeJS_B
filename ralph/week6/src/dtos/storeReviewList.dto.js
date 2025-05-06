@@ -6,12 +6,12 @@ export const bodyToStoreReviewList = (data) => {
     };
 };
 export const responseFromStoreReviewList = (res) => {
+    console.log("res", res);
+
     return {
-        id: res.id,
-        user_name: res.user_name,
-        store_name: res.store_name,
-        review_point: res.review_point,
-        content: res.content,
-        created_at: res.created_at,
+        data: res,
+        pagination: {
+            cursor: res.length ? res[res.length - 1].id : null,
+        },
     };
 };
