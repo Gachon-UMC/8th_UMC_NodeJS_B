@@ -1,53 +1,31 @@
 import { pool, prisma } from "../../db.config.js";
 
 // User 데이터 삽입
-export const addUser = async (data) => {
-    const user = await prisma.user.findFrist({
+export const addUser = async ({ data }) => {
+    console.log("하이", data.gender);
+    console.log("찾는 email:", data.email);
+    const user = await prisma.user.findFirst({
         where: {
             email: data.email,
         },
     });
-    console.log(user);
+    console.log("user", user);
     if (user) {
-        console.log("이미 존재하는 id입니다.");
         return null;
     }
-    // const created = await prisma.user.create({
-    //     data: data,
-    // });
-    // return created.id;
-    // try {
-    //     const [confirm] = await pool.query(
-    //         `SELECT EXISTS(SELECT 1 FROM user WHERE email = ?) as isExistEmail;`,
-    //         data.email
-    //     );
-
-    //     if (confirm[0].isExistEmail) {
-    //         return null;
-    //     }
-
-    //     const [result] = await pool.query(
-    //         `INSERT INTO user (name,password,email,birth, phone_number, gender,  address , my_point ) VALUES (?, ?, ?, ?, ?, ?,?,?);`,
-    //         [
-    //             data.name,
-    //             data.password,
-    //             data.email,
-    //             data.birth,
-    //             data.phone_number,
-    //             data.gender,
-    //             data.address,
-    //             data.my_point,
-    //         ]
-    //     );
-
-    //     return result.insertId;
-    // } catch (err) {
-    //     throw new Error(
-    //         `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
-    //     );
-    // } finally {
-    //     conn.release();
-    // }
+    const created = await prisma.user.create({
+        data: {
+            name: data.name,
+            password: data.password,
+            email: data.email,
+            birth: data.birth,
+            phoneNumber: data.phoneNumber,
+            gender: data.gender,
+            address: data.address,
+            myPoint: data.myPoint,
+        },
+    });
+    return created.id;
 };
 
 // 사용자 정보 얻기

@@ -7,19 +7,22 @@ import {
 } from "./repositories/user.repository.js";
 
 export const userSignUp = async (data) => {
+    // console.log(data);
+    console.log(data.gender);
     const joinUserId = await addUser({
-        name: data.name,
-        password: data.password,
-        email: data.email,
-        birth: data.birth,
-        phone_number: data.phone_number,
-        gender: data.gender,
-        address: data.address,
-        birth: data.birth,
-        my_point: data.my_point,
-        preferences: data.preferences,
+        data: {
+            name: data.name,
+            password: data.password,
+            email: data.email,
+            birth: data.birth,
+            phoneNumber: data.phoneNumber,
+            gender: data.gender,
+            address: data.address,
+            myPoint: data.myPoint,
+            preferences: data.preferences,
+        },
     });
-
+    console.log("joinUserId", joinUserId);
     if (joinUserId === null) {
         throw new Error("이미 존재하는 이메일입니다.");
     }
