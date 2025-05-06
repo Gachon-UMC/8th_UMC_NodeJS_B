@@ -3,7 +3,7 @@ import { pool } from "../db.config.js";
 import { addMission } from "./repositories/addMission.repository.js";
 
 export const addMissionStore = async (data) => {
-    // console.log(data);
+    console.log("data1", data);
     const addMissionId = await addMission({
         status: data.status,
         content: data.content,
