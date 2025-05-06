@@ -7,7 +7,6 @@ export const addChallengeMission = async (data) => {
         userId: data.userId,
         created_at: new Date(),
     });
-
     if (challengeId === null) {
         throw new Error("이미 존재하는 user_mission입니다.");
     }
@@ -15,5 +14,10 @@ export const addChallengeMission = async (data) => {
         data.missionId,
     ]);
     const addMission = rows[0];
-    return responseFromAddChallenge(addMission);
+    return responseFromAddChallenge({
+        id: addMission.id,
+        userId: data.userId,
+        missionId: data.missionId,
+        createdAt: addMission.created_at,
+    });
 };

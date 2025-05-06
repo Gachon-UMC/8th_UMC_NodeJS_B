@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
 
 app.post("/api/v1/users/signup", handleUserSignUp);
 
-app.post("/api/v1/missions/:missionId/", handleAddChallenge);
+app.post("/api/v1/missions/:missionId", handleAddChallenge);
 
 app.post("/api/v1/mission/:storeid/users", handleAddMission);
 
