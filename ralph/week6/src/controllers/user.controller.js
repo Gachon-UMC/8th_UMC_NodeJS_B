@@ -48,6 +48,6 @@ export const handleAddReview = async (req, res) => {
     const review = await addReviewStore(
         bodyToReview({ ...req.body, store_id: storeId })
     );
-
+    console.log(review);
     res.status(StatusCodes.OK).json({ result: review });
 };
