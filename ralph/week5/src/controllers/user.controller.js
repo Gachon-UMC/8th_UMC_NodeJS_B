@@ -4,15 +4,11 @@ import { userSignUp } from "../services/user.service.js";
 import { addChallengeMission } from "../services/addChallenge.service.js";
 import { bodyToAddChallenge } from "../dtos/addChallenge.dto.js";
 
-
-
 import { bodyToAddMission } from "../dtos/addMission.dto.js";
 import { addMissionStore } from "../services/addMission.service.js";
 
 import { addReviewStore } from "../services/review.service.js";
 import { bodyToReview } from "../dtos/review.dto.js";
-
-
 
 export const handleUserSignUp = async (req, res) => {
     console.log("회원가입을 요청했습니다!");
@@ -21,7 +17,6 @@ export const handleUserSignUp = async (req, res) => {
     const user = await userSignUp(bodyToUser(req.body));
     res.status(StatusCodes.OK).json({ result: user });
 };
-
 
 export const handleAddChallenge = async (req, res) => {
     console.log("미션 도전하기를 요청했습니다.");
@@ -35,8 +30,7 @@ export const handleAddChallenge = async (req, res) => {
         bodyToAddChallenge({ missionId, userId })
     );
     res.status(StatusCodes.OK).json({ result: patchMission });
-
-
+};
 export const handleAddMission = async (req, res) => {
     const storeId = req.params.storeid;
     console.log("미션 추가 요청했습니다.");
@@ -46,7 +40,7 @@ export const handleAddMission = async (req, res) => {
     );
     // console.log(mission);
     res.status(StatusCodes.OK).json({ result: mission });
-
+};
 export const handleAddReview = async (req, res) => {
     console.log("리뷰 작성 요청했습니다.");
     const storeId = req.params.storeid;
@@ -57,5 +51,4 @@ export const handleAddReview = async (req, res) => {
     );
 
     res.status(StatusCodes.OK).json({ result: review });
-
 };
