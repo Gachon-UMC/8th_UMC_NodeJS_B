@@ -3,9 +3,9 @@ import { addUserMission, getUserMission } from "../repositories/user.mission.rep
 
 export const userMission = async (data) => {
     const userMissionId = await addUserMission({
-        member_id: data.member_id,
-        mission_id: data.mission_id,
-        is_finished: data.is_finished,
+        userId: data.userId,
+        missionId: data.missionId,
+        isFinished: data.isFinished,
     });
 
     if (userMissionId === null) {
@@ -14,5 +14,5 @@ export const userMission = async (data) => {
 
     const result = await getUserMission(userMissionId);
 
-    return responseFromUserMission(result[0]);
+    return responseFromUserMission(result);
 };
