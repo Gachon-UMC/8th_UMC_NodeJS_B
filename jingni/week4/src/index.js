@@ -5,7 +5,7 @@ import express from "express";         // -> ES Module
 
 import { handleUserSignUp } from "./controllers/user.controller.js";
 import { handleAddMission, handleUpdateMission } from "./controllers/mission.controller.js";
-import { handleAddReview } from "./controllers/review.controller.js";
+import { handleAddReview, handleShowReviews } from "./controllers/review.controller.js";
 
 dotenv.config();
 
@@ -27,9 +27,10 @@ app.get('/', (req, res) => {
 })
 
 app.post("/api/v1/users/signup", handleUserSignUp); //POST 요청을 보내면 handleUserSingup이 실행될 것
-app.patch("/api/v1/users/missions/:missionId", handleUpdateMission)
+app.patch("/api/v1/users/missions/:missionId", handleUpdateMission);
 app.post("/api/v1/:storeId/missions/users", handleAddMission);
-app.post("/api/v1/:storeId/reviews/users",handleAddReview)
+app.post("/api/v1/:storeId/reviews/users",handleAddReview);
+app.get("/api/v1/stores/:storeId/reviews", handleShowReviews);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
