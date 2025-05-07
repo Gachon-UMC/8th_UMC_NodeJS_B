@@ -19,7 +19,7 @@ export const getUser = async (userId) => {
 
 // 음식 선호 카테고리 매핑
 export const setPreference = async (userId, foodCategoryId) => {
-  await prisma.userFavorCategory.create({
+  await prisma.prefer.create({
     data: {
       userId: userId,
       foodCategoryId: foodCategoryId,
@@ -29,7 +29,7 @@ export const setPreference = async (userId, foodCategoryId) => {
 
 // 사용자 선호 카테고리 반환
 export const getUserPreferencesByUserId = async (userId) => {
-  const preferences = await prisma.userFavorCategory.findMany({
+  const preferences = await prisma.prefer.findMany({
     select: {
       id: true,
       userId: true,

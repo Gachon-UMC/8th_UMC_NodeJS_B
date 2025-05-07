@@ -24,7 +24,7 @@ model User {
   address       String   @db.VarChar(255)
   phone         String   @map("phone") @db.VarChar(15)
 
-  favorCategories UserFavorCategory[]
+  prefer Prefer[]
   writtenReviews Review[]
 
   @@map("user")
@@ -34,12 +34,12 @@ model FoodCategory {
   id   Int    @id @default(autoincrement())
   name String @db.VarChar(100)
 
-  userFavorCategories UserFavorCategory[]
+  prefer Prefer[]
 
   @@map("food_category")
 }
 
-model UserFavorCategory {
+model Prefer {
   id             Int          @id @default(autoincrement())
   userId         Int          @map("user_id")
   foodCategoryId Int          @map("food_category_id")
