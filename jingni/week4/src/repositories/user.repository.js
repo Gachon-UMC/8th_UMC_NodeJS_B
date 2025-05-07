@@ -5,7 +5,7 @@ export const addUser = async (data) => {
   const conn = await pool.getConnection();
 
   try {
-    const [confirm] = await pool.query(
+    const [confirm] = await conn.query(
       `SELECT EXISTS(SELECT 1 FROM user WHERE email = ?) as isExistEmail;`,
       data.email
     );
@@ -14,7 +14,7 @@ export const addUser = async (data) => {
       return null;
     }
 
-    const [result] = await pool.query(
+    const [result] = await conn.query(
       `INSERT INTO user (email, name, password, gender, birth, address, phone) VALUES (?, ?, ?, ?, ?, ?, ?);`,
       [
         data.email,
@@ -42,7 +42,7 @@ export const getUser = async (userId) => {
   const conn = await pool.getConnection();
 
   try {
-    const [user] = await pool.query(`SELECT * FROM user WHERE id = ?;`, userId);
+    const [user] = await conn.query(`SELECT * FROM user WHERE id = ?;`, userId);
 
     console.log(user);
 
@@ -65,7 +65,7 @@ export const setPreference = async (userId, foodCategoryId) => {
   const conn = await pool.getConnection();
 
   try {
-    await pool.query(
+    await conn.query(
       `INSERT INTO prefer (food_category_id, user_id) VALUES (?, ?);`,
       [foodCategoryId, userId]
     );
@@ -85,7 +85,7 @@ export const getUserPreferencesByUserId = async (userId) => {
   const conn = await pool.getConnection();
 
   try {
-    const [preferences] = await pool.query(
+    const [preferences] = await conn.query(
       "SELECT prefer.id, prefer.food_category_id, prefer.user_id, food_category.name " +
         "FROM prefer JOIN food_category on prefer.food_category_id = food_category.id " +
         "WHERE prefer.user_id = ? ORDER BY prefer.food_category_id ASC;",
@@ -101,3 +101,4 @@ export const getUserPreferencesByUserId = async (userId) => {
     conn.release();
   }
 };
+

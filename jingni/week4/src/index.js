@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import express from "express";         // -> ES Module
 
 import { handleUserSignUp } from "./controllers/user.controller.js";
+import { handleAddReview } from "./controllers/review.controller.js";
 
 
 dotenv.config();
@@ -26,6 +27,7 @@ app.get('/', (req, res) => {
 })
 
 app.post("/api/v1/users/signup", handleUserSignUp); //POST 요청을 보내면 handleUserSingup이 실행될 것
+app.post("/api/v1/:storeId/reviews/users",handleAddReview)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
