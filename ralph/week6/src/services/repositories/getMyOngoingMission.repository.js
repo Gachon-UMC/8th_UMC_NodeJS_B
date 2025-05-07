@@ -24,10 +24,8 @@ export const MyOngoingMission = async (userId, cursor) => {
         },
         where: {
             user_id: userId,
+            status: "onGoing",
             id: { gt: cursor },
-            mission: {
-                status: 0,
-            },
         },
         orderBy: {
             id: "asc",
