@@ -4,10 +4,11 @@ export const bodyToUser = (body) => {
     return {
       email: body.email,
       name: body.name,
+      password: body.password,
       gender: body.gender,
-      birth,
+      birth: birth,
       address: body.address || "",
-      phone: body.phoneNumber,
+      phone: body.phone,
       preferences: body.preferences,
       status: 1,
       inactive_data: null
@@ -15,20 +16,13 @@ export const bodyToUser = (body) => {
   };
 
   export const responseFromUser = ({ user, preferences }) => {
+    const preferFoods = preferences.map(
+      (preference) => preference.foodCategory.name
+    );
+  
     return {
-      id: user.id,
       email: user.email,
       name: user.name,
-      gender: user.gender,
-      birth: user.birth,
-      address: user.address,
-      phone: user.phone,
-      preferences: preferences.map((pref) => ({
-        id: pref.food_category_id,
-        name: pref.name,
-      })),
-      created_at: user.created_at,
-      status: user.status,                    
-      inactive_at: user.inactive_data || null  
+      preferCategory: preferFoods,
     };
   };
