@@ -18,3 +18,12 @@ export const responseFromReview = (review) => {
         store_id: review.store_id
     }
 }
+
+export const responseFromReviewList = (reviews) => {
+    return {
+      data: reviews,
+      pagination: {
+        cursor: reviews.length ? reviews[reviews.length - 1].id : null,
+      },
+    };
+  };

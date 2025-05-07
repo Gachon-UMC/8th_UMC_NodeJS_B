@@ -1,4 +1,4 @@
-import { pool } from "../db.config.js";
+import { pool, prisma } from "../db.config.js";
 
 export const addReviewToDB = async (data) => {
     const conn = await pool.getConnection();
@@ -33,7 +33,7 @@ export const addReviewToDB = async (data) => {
     }
   }
 
-  export const getReviewToDB = async (reviewId) => {
+export const getReviewToDB = async (reviewId) => {
     const conn = await pool.getConnection();
 
     try{
@@ -54,3 +54,29 @@ export const addReviewToDB = async (data) => {
       conn.release();
     }
   }
+
+  export const getAllReviewsFromDB = async (storeId, cursor) => {
+    
+    const reviews = await prisma.review.findMany({
+      select: {
+        id: true,
+        content: true,
+        rating: true,
+        title: true,
+        storeId: true,
+        userId: true,
+        store: true,
+        user: true,
+      },
+      where: { 
+        storeId: storeId, 
+        id: { 
+          gt: cursor 
+        }
+      },
+      orderBy: { id: "asc" },
+      take: 5,
+    });
+  
+    return reviews;
+  };
