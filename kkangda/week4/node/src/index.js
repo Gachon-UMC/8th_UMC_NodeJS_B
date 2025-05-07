@@ -3,6 +3,9 @@ import dotenv from "dotenv";
 import express from "express";
 import { handleUserSignUp } from "./controllers/user.controller.js";
 import { handleUserMission } from "./controllers/user.mission.controller.js";
+import { handleStoreReview } from "./controllers/store.review.controller.js";
+import { handleStoreMission } from "./controllers/store.mission.controller.js";
+import { handleListStoreReviews } from "./controllers/store.controller.js";
 
 dotenv.config();
 
@@ -27,6 +30,8 @@ app.post("/stores/1/missions", handleStoreMission);
 =======
 app.post("/users/1/missions", handleUserMission);
 >>>>>>> ff42b91 (feat: challenge mission api)
+
+app.get("/api/v1/stores/:storeId/reviews", handleListStoreReviews);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
