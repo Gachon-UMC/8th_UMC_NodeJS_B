@@ -14,7 +14,7 @@ export const responseFromReview = (review) => {
         title: review.title,
         content: review.content,
         rating: review.rating,
-        userId: review.user_id,
-        storeId: review.store_id
+        user_id: review.user_id,
+        store_id: review.store_id
     }
 }

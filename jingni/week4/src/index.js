@@ -4,8 +4,7 @@ import dotenv from "dotenv";
 import express from "express";         // -> ES Module
 
 import { handleUserSignUp } from "./controllers/user.controller.js";
-import { handleUpdateMission } from "./controllers/ch_mission.controller.js"
-import { handleAddMission } from "./controllers/mission.controller.js";
+import { handleAddMission, handleUpdateMission } from "./controllers/mission.controller.js";
 import { handleAddReview } from "./controllers/review.controller.js";
 
 dotenv.config();

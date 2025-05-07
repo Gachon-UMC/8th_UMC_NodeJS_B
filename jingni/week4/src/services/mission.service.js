@@ -2,11 +2,14 @@ import { responseFromMission } from "../dtos/mission.dto.js";
 
 import {
     addMissionToDB,
-    getMissionFromDB
+    getMissionFromDB,
+    updateMissionToDB,
 } from "../repositories/mission.repository.js";
 
 
 export const addMission = async (data) =>{
+    console.log(data);
+    
     const newMissionId = await addMissionToDB ({
         title: data.title,
         content: data.content,
@@ -22,4 +25,15 @@ export const addMission = async (data) =>{
     const mission = await getMissionFromDB(newMissionId);
 
     return responseFromMission(mission[0]);
+}
+
+
+export const modifyMission = async (data) => {
+    
+    const updatedMissionId = await updateMissionToDB(data);
+    if(updatedMissionId == null){
+        throw new Error("해당 미션을 찾을 수 없습니다.");
+    }
+
+    return responseFromMission({mission_id : updatedMissionId});
 }

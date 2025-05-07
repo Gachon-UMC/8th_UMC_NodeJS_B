@@ -37,7 +37,7 @@ export const addReviewToDB = async (data) => {
     const conn = await pool.getConnection();
 
     try{
-      const [review] = await conn.query("SELECT * FROM review WHERE id = ?", [reviewId])
+      const [review] = await conn.query("SELECT id FROM review WHERE id = ?", [reviewId])
 
       console.log(review);
 

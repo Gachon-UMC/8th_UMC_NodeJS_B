@@ -27,8 +27,8 @@ export const bodyToUser = (body) => {
         id: pref.food_category_id,
         name: pref.name,
       })),
-      createdAt: user.created_at,
+      created_at: user.created_at,
       status: user.status,                    
-      inactiveAt: user.inactive_data || null  
+      inactive_at: user.inactive_data || null  
     };
   };

@@ -42,7 +42,7 @@ export const getUser = async (userId) => {
   const conn = await pool.getConnection();
 
   try {
-    const [user] = await conn.query(`SELECT * FROM user WHERE id = ?;`, userId);
+    const [user] = await conn.query(`SELECT id FROM user WHERE id = ?;`, userId);
 
     console.log(user);
 

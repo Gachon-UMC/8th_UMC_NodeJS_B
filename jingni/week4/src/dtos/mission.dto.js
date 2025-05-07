@@ -1,11 +1,12 @@
 export const bodyToMission = (body) => {
+
     return {
         title: body.title,
         content: body.content,
-        point: Number(body.point),
+        point: body.point,
         deadline: body.deadline,
         inactive_data: null,
-        store_id: Number(body.store_id)
+        store_id: body.store_id,
     }
 }
 
@@ -20,5 +21,24 @@ export const responseFromMission = (mission) => {
         inactive_data: mission.inactive_data,
         deadline: mission.deadline,
         store_id: mission.store_id
+    }
+}
+
+export const bodyToDoMission = (body) => {
+    return {
+        status: Number(body.status),
+        user_id: Number(body.user_id),
+        mission_id: Number(body.mission_id)
+    }
+}
+
+export const responseFromDoMission = (data) => {
+    return {
+        id : data.id,
+        created_at: data.created_at,
+        status: data.status,
+        completed_at: data.completed_at,
+        user_id:data.user_id,
+        mission_id:data.mission_id
     }
 }
