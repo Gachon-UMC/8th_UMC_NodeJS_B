@@ -2,6 +2,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import { handleUserSignUp } from "./controllers/user.controller.js";
+import { handleUserMission } from "./controllers/user.mission.controller.js";
 import { handleStoreReview } from "./controllers/store.review.controller.js";
 import { handleStoreMission } from "./controllers/store.mission.controller.js";
 
@@ -20,6 +21,8 @@ app.get("/", (req, res) => {
 });
 
 app.post("/api/v1/users/signup", handleUserSignUp);
+
+app.post("/users/1/missions", handleUserMission);
 
 app.post("/stores/1/reviews", handleStoreReview);
 
