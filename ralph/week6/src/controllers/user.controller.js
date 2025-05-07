@@ -7,7 +7,7 @@ import { bodyToAddMission } from "../dtos/addMission.dto.js";
 import { addMissionStore } from "../services/addMission.service.js";
 import { addReviewStore } from "../services/review.service.js";
 import { bodyToReview } from "../dtos/review.dto.js";
-
+import { getMyOngoingMission } from "../services/getMyOngoingMission.service.js";
 export const handleUserSignUp = async (req, res) => {
     console.log("회원가입을 요청했습니다!");
     console.log("body:", req.body); // 값이 잘 들어오나 확인하기 위한 테스트용
@@ -50,4 +50,16 @@ export const handleAddReview = async (req, res) => {
     );
 
     res.status(StatusCodes.OK).json({ result: review });
+};
+
+export const handleGetMyOngoingMission = async (req, res) => {
+    console.log("내 미션 조회 요청했습니다.");
+    const userId = req.params.userId;
+    const cursor = req.query.cursor;
+    console.log(typeof userId);
+    const onGoingMission = await getMyOngoingMission(
+        parseInt(userId),
+        typeof cursor === "string" ? parseInt(cursor) : 0
+    );
+    res.status(StatusCodes.OK).json({ result: onGoingMission });
 };
