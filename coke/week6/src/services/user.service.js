@@ -1,4 +1,3 @@
-// user.service.js
 import { addUser, getUserByEmail, getUserById } from "../repositories/user.repository.js";
 import { setUserCategoryPreference, getUserPreferencesByUserId } from "../repositories/user.repository.js";
 import { responseFromUser } from "../dtos/user.dto.js";
@@ -11,7 +10,7 @@ export const userSignUp = async (userData) => {
   }
   
   // 테스트 환경에서는 간단하게 비밀번호 처리
-  const passwordHash = userData.password + "_hashed"; // 단순히 접미사 추가 (테스트용)
+  const passwordHash = userData.password + "_hashed"; // 단순히 끝에 hashed추가 (테스트용이니까)
   
   // 사용자 정보 저장
   const userId = await addUser({
