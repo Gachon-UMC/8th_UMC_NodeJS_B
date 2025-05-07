@@ -1,11 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -14,16 +9,156 @@ datasource db {
 }
 
 model User {
-  id            BigInt     @id @db.BigInt @default(autoincrement())
-  name          String     @db.VarChar(100)
-  password      String     @db.VarChar(255)
-  email         String     @db.VarChar(40)
-  birth         String     @db.Char(10)
-  phoneNumber   String     @map("phone_number") @db.VarChar(13)
-  address       String     @db.VarChar(40)
-  myPoint       Int        @map("my_point")  @db.Int
-  detailAddress String?    @map("detail_address") @db.VarChar(255)
+  id            BigInt          @id @default(autoincrement())
+  name          String          @db.VarChar(20)
+  password      String          @db.VarChar(255)
+  email         String          @db.VarChar(40)
+  birth         String          @db.Char(10)
+  phoneNumber   String          @map("phone_number") @db.Char(13)
+  gender        String          @db.VarChar(10)
+  address       String          @db.VarChar(40)
+  myPoint       Int             @default(0) @map("my_point")
+  point         point[]
+  question      question[]
+  review        review[]
+  user_category user_category[]
+  user_mission  user_mission[]
 
   @@map("user")
 }
 
+model category {
+  id            BigInt          @id @default(autoincrement())
+  kind          String?         @db.VarChar(10)
+  store         store[]
+  user_category user_category[]
+}
+
+model image {
+  id         BigInt   @id @default(autoincrement())
+  store_id   BigInt
+  thumb_url  String?  @db.VarChar(255)
+  photo_url  String?  @db.VarChar(255)
+  created_at DateTime @default(dbgenerated("(now())")) @db.DateTime(6)
+  store      store    @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "image_store_id_fk")
+
+  @@index([store_id], map: "image_store_id_fk")
+}
+
+model mission {
+  id            BigInt          @id @default(autoincrement())
+  status        Int
+  content       String          @db.Text
+  point         BigInt
+  store_id      BigInt
+  end_date      DateTime        @db.DateTime(6)
+  created_at    DateTime        @default(dbgenerated("(now())")) @db.DateTime(6)
+  store         store           @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "mission_store_id_fk")
+  store_mission store_mission[]
+  user_mission  user_mission[]
+
+  @@index([store_id], map: "mission_store_id_fk")
+}
+
+model point {
+  id         BigInt   @id @default(autoincrement())
+  user_id    BigInt
+  my_point   BigInt
+  created_at DateTime @default(dbgenerated("(now())")) @db.DateTime(0)
+  user       User     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "point_user_id_fk")
+
+  @@index([user_id], map: "point_user_id_fk")
+}
+
+model question {
+  Id            BigInt                 @id @default(autoincrement())
+  user_id       BigInt
+  title         String                 @db.VarChar(5)
+  question_type question_question_type
+  content       String                 @db.Text
+  photo_url     String                 @db.VarChar(255)
+  created_at    DateTime               @db.DateTime(6)
+  updated_at    DateTime               @db.DateTime(6)
+  user          User                   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_id_FK")
+
+  @@index([user_id], map: "question_user_id_fk")
+}
+
+model review {
+  id           BigInt         @id @default(autoincrement())
+  store_id     BigInt
+  review_point BigInt
+  content      String         @db.VarChar(255)
+  created_at   DateTime       @default(dbgenerated("(now())")) @db.DateTime(6)
+  user_id      BigInt
+  store        store          @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_store_id_fk")
+  user         User           @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_user_id_fk")
+  review_image review_image[]
+
+  @@index([store_id], map: "review_store_id_fk")
+  @@index([user_id], map: "review_user_id_fk")
+}
+
+model review_image {
+  id         BigInt    @id @default(autoincrement())
+  review_id  BigInt
+  image_url  String    @db.VarChar(255)
+  created_at DateTime  @db.DateTime(6)
+  updated_at DateTime? @db.DateTime(6)
+  review     review    @relation(fields: [review_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_image_review_id_fk")
+
+  @@index([review_id], map: "review_image_review_id_fk")
+}
+
+model store {
+  id            BigInt          @id @default(autoincrement())
+  category_id   BigInt
+  name          String          @db.VarChar(30)
+  created_at    DateTime        @default(dbgenerated("(now())")) @db.DateTime(6)
+  image         image[]
+  mission       mission[]
+  review        review[]
+  category      category        @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "store_category_id_fk")
+  store_mission store_mission[]
+
+  @@index([category_id], map: "store_category_id_fk")
+}
+
+model store_mission {
+  id         BigInt   @id @default(autoincrement())
+  store_id   BigInt
+  mission_id BigInt
+  created_at DateTime @db.DateTime(6)
+  mission    mission  @relation(fields: [mission_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "store_mission_mission_id_fk")
+  store      store    @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "store_mission_store_id_fk")
+
+  @@index([mission_id], map: "store_mission_mission_id_fk")
+  @@index([store_id], map: "store_mission_store_id_fk")
+}
+
+model user_category {
+  id          Int      @id @default(autoincrement())
+  category_id BigInt
+  user_id     BigInt
+  category    category @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_category_category_id_fk")
+  user        User     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_category_user_id_fk")
+
+  @@index([category_id], map: "user_category_category_id_fk")
+  @@index([user_id], map: "user_category_user_id_fk")
+}
+
+model user_mission {
+  id         BigInt  @id @default(autoincrement())
+  user_id    BigInt
+  mission_id BigInt
+  mission    mission @relation(fields: [mission_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_mission_mission_id_fk")
+  user       User    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_mission_user_id_fk")
+
+  @@index([mission_id], map: "user_mission_mission_id_fk")
+  @@index([user_id], map: "user_mission_user_id_fk")
+}
+
+enum question_question_type {
+  munui  @map("문의")
+  hangui @map("항의")
+}
