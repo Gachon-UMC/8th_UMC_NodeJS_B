@@ -1,5 +1,5 @@
 import { responseFromReview } from "../dtos/review.dto.js";
-import { addReview } from "./repositories/review.repository.js";
+import { addReview, getFirstReview } from "./repositories/review.repository.js";
 import { pool } from "../db.config.js";
 
 export const addReviewStore = async (data) => {
@@ -11,10 +11,8 @@ export const addReviewStore = async (data) => {
         content: data.content,
         name: data.name,
     });
-    const [rows] = await pool.query(`SELECT * FROM review WHERE id = ?`, [
-        addReviewId,
-    ]);
-    const insertedReview = rows[0];
-    console.log(insertedReview);
-    return responseFromReview(insertedReview);
+    console.log("addReviewId", addReviewId);
+    const firstReview = await getFirstReview(addReviewId);
+    console.log("firstReview", firstReview);
+    return responseFromReview(firstReview);
 };
