@@ -57,8 +57,10 @@ model mission {
   store_id      BigInt
   end_date      DateTime        @db.DateTime(6)
   created_at    DateTime        @default(dbgenerated("(now())")) @db.DateTime(6)
+  store         store           @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "mission_store_id_fk")
   store_mission store_mission[]
   user_mission  user_mission[]
+  @@index([store_id], map: "mission_store_id_fk")
 }
 
 model point {
@@ -113,6 +115,7 @@ model store {
   name          String          @db.VarChar(30)
   created_at    DateTime        @default(dbgenerated("(now())")) @db.DateTime(6)
   image         image[]
+  mission       mission[]
   review        review[]
   category      category        @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "store_category_id_fk")
   store_mission store_mission[]
@@ -141,18 +144,25 @@ model user_category {
 }
 
 model user_mission {
-  id         BigInt  @id @default(autoincrement())
+  id         BigInt              @id @default(autoincrement())
   user_id    BigInt
   mission_id BigInt
-  mission    mission @relation(fields: [mission_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_mission_mission_id_fk")
-  user       User    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_mission_user_id_fk")
+  status     user_mission_status @default(dbgenerated("0"))
+  mission    mission             @relation(fields: [mission_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_mission_mission_id_fk")
+  user       User                @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_mission_user_id_fk")
   @@index([mission_id], map: "user_mission_mission_id_fk")
   @@index([user_id], map: "user_mission_user_id_fk")
 }
 
 enum question_question_type {
-  munui   @map("문의")
-  hangui  @map("항의")
+  munui  @map("문의")
+  hangui @map("항의")
+}
+
+enum user_mission_status {
+  created @map("0")
+  onGoing @map("1")
+  completed @map("2")
 }
 
 
