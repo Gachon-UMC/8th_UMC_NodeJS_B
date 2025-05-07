@@ -5,16 +5,8 @@ export const bodyToAddChallenge = (data) => {
         userId: data.userId,
     };
 };
-export const responseFromAddChallenge = ({
-    id,
-    missionId,
-    userId,
-    createdAt,
-}) => {
+export const responseFromAddChallenge = (res) => {
     return {
-        id: id,
-        missionId: missionId,
-        userId: userId,
-        createdAt: createdAt,
+        data: res,
     };
 };
