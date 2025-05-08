@@ -4,6 +4,8 @@ export const responseFromReviews = (reviews) => {
         content: review.content,
         store_name: review.store.name,
         user_name: review.user.name,
+        star_rating: review.starRating,
+        created_at: review.createdAt,
     }));
 
     return {
