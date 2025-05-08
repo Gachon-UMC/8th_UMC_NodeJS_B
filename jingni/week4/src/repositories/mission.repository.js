@@ -34,40 +34,92 @@ export const getMissionFromDB = async (missionId) => {
     return mission;
 }
 
+export const getStoreMissionFromDB = async (storeId, cursor) => {
+
+    const missions = await prisma.mission.findMany({
+        select:{
+            id: true,
+            title: true,
+            content: true,
+            point: true,
+            deadline: true,
+            storeId: true,
+            store: true,
+            doMission: true
+        },
+        where:{
+            storeId: storeId,
+            id: {
+                gt: cursor
+            }
+        },
+        orderBy: { id: "asc" },
+        take: 5,
+    });
+    return missions;
+  }
+
 export const updateMissionToDB = async (data) => {
 
-    const basicStatus = 1;
+    const isDoingStatus = 1;
+    const isCompletedStatus = 2;
 
-    const doMission = await prisma.doMission.findFirst({where: {missionId: data.mission_id}})
-    if(!doMission){
-        //INSERT do_mission
-        const createdDoMission = await prisma.doMission.create({
-            data:{
-                //status: 진행 중
-                status: basicStatus,
-                user: {
-                    connect: {id : data.user_id}
-                },
-                mission: {
-                    connect: {id : data.mission_id}
+    if(data.status ==1){
+        const doMission = await prisma.doMission.findFirst({where: {missionId: data.mission_id}})
+        if(!doMission){
+            //INSERT do_mission
+            const createdDoMission = await prisma.doMission.create({
+                data:{
+                    //status: 진행 중
+                    status: isDoingStatus,
+                    user: {
+                        connect: {id : data.user_id}
+                    },
+                    mission: {
+                        connect: {id : data.mission_id}
+                    }
                 }
+            })
+
+            return createdDoMission.id;
+        }else{
+
+            const challenging = await prisma.doMission.findFirst({
+                where: {
+                    userId: data.user_id,
+                    missionId: data.mission_id,
+                    status: 1
+                }})
+
+            if(challenging){
+                throw new Error('이미 도전중인 미션입니다.');
+            }
+            
+            await prisma.doMission.updateMany({
+                where: {
+                    userId: data.user_id,
+                    missionId: data.mission_id
+                },
+                data: {
+                    status: data.status
+                }
+            });
+
+            return data.mission_id
+        }
+    }else if(data.status == 2){
+        const myDoingMission = await prisma.doMission.findFirst({
+            where: {
+                userId: data.userId,
+                missionId: data.mission,
+                status: 1
             }
         })
 
-        return createdDoMission.id;
-    }else{
-
-        const challenging = await prisma.doMission.findFirst({
-            where: {
-                userId: data.user_id,
-                missionId: data.mission_id,
-                status: 1
-            }})
-
-        if(challenging){
-            throw new Error('이미 도전중인 미션입니다.');
+        if(!myDoingMission){
+            throw new Error("도전중인 미션이 아닙니다.");
         }
-        
+
         await prisma.doMission.updateMany({
             where: {
                 userId: data.user_id,

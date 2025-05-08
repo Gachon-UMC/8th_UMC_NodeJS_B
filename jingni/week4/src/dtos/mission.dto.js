@@ -17,8 +17,6 @@ export const responseFromMission = (mission) => {
         title: mission.title,
         content: mission.content,
         point: mission.point,
-        created_at: mission.created_at,
-        updated_at: mission.updated_at,
         inactive_data: mission.inactive_data,
         deadline: mission.deadline,
         store_id: mission.store_id
@@ -43,3 +41,13 @@ export const responseFromDoMission = (data) => {
         mission_id:data.mission_id
     }
 }
+
+
+export const responseFromMissionList = (missions) => {
+    return {
+      data: missions,
+      pagination: {
+        cursor: missions.length ? missions[missions.length - 1].id : null,
+      },
+    };
+  };
