@@ -1,9 +1,10 @@
-import { responseFromMission } from "../dtos/mission.dto.js";
+import { responseFromMission, responseFromMissionList } from "../dtos/mission.dto.js";
 
 import {
     addMissionToDB,
     getMissionFromDB,
     updateMissionToDB,
+    getStoreMissionFromDB
 } from "../repositories/mission.repository.js";
 
 
@@ -36,4 +37,9 @@ export const modifyMission = async (data) => {
     }
 
     return responseFromMission({mission_id : updatedMissionId});
+}
+
+export const showStoreMissions = async (storeId, cursor) => {
+    const missions = await getStoreMissionFromDB(storeId, cursor);
+    return responseFromMissionList(missions);
 }

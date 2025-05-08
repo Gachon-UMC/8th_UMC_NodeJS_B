@@ -4,7 +4,7 @@ import{
     addReviewToDB,
     getReviewToDB,
     getAllReviewsFromDB,
-    getAllMyReviewsFromDB
+    getAllMyReviewsFromDB,
 } from "../repositories/review.repository.js";
 
 export const addReview = async (data) =>{
