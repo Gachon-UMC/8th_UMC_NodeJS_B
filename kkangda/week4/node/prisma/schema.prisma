@@ -43,40 +43,15 @@ model FoodPreference {
   @@map("food_preference")
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-model Store{
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(50)
-  userStoreReviews  UserStoreReview[]
-  missions Mission[]
-=======
-=======
->>>>>>> a3a87db (feat: mission complete api)
 model Store {
   id               Int               @id @default(autoincrement())
   name             String            @db.VarChar(50)
   mission          Mission[]
   userStoreReviews UserStoreReview[]
 
-<<<<<<< HEAD
->>>>>>> 5483bbb (feat: store mission list api)
-=======
->>>>>>> a3a87db (feat: mission complete api)
   @@map("store")
 }
 
-model UserStoreReview {
-  id         Int    @id @default(autoincrement())
-  storeId    Int    @map("store_id")
-  userId     Int    @map("user_id")
-  content    String @db.Text
-  starRating Int    @default(5)
-  store      Store  @relation(fields: [storeId], references: [id])
-  user       User   @relation(fields: [userId], references: [id])
-
-<<<<<<< HEAD
-<<<<<<< HEAD
 model UserStoreReview{
   id Int @id @default(autoincrement())
   store Store @relation(fields:[storeId],references:[id])
@@ -88,76 +63,20 @@ model UserStoreReview{
   @@map("user_store_review")
 }
 
-model Mission{
-	id Int @id @default(autoincrement())
-	store Store @relation(fields:[storeId],references:[id])
-  storeId Int @db.Int @map("store_id")
-	content	String @db.VarChar(50)
-	deadline DateTime @db.Date
-	reward Int @db.Int
-
-  userMission UserMission[]
-  
-  @@map("mission")
-}
-
-model UserMission{
-	id Int @id @default(autoincrement())
-  user User @relation(fields:[userId],references:[id])
-  userId Int @db.Int @map("user_id")
-	mission Mission @relation(fields:[missionId],references:[id])
-  missionId Int @db.Int @map("mission_id")
-  isFinished Int @db.Int
-  @@map("user_mission")
-}
-
-=======
-  @@index([storeId], map: "user_store_review_store_id_fkey")
-  @@index([userId], map: "user_store_review_user_id_fkey")
-  @@map("user_store_review")
-}
-
-model Mission {
-  id           Int            @id @default(autoincrement())
-  storeId      Int            @map("store_id")
-=======
-  @@index([storeId], map: "user_store_review_store_id_fkey")
-  @@index([userId], map: "user_store_review_user_id_fkey")
-  @@map("user_store_review")
-}
-
 model Mission {
   id           Int            @id @default(autoincrement())
   storeId      Int
->>>>>>> a3a87db (feat: mission complete api)
   content      String         @db.VarChar(50)
   deadline     DateTime       @db.Date
   reward       Int
   store        Store          @relation(fields: [storeId], references: [id])
-<<<<<<< HEAD
-  user_mission user_mission[]
-=======
+
   userMission UserMission[]
->>>>>>> a3a87db (feat: mission complete api)
 
   @@index([storeId], map: "mission_store_id_fkey")
   @@map("mission")
 }
 
-<<<<<<< HEAD
-model user_mission {
-  id         Int     @id @default(autoincrement())
-  user_id    Int
-  mission_id Int
-  isFinished Int
-  mission    Mission @relation(fields: [mission_id], references: [id])
-  user       User    @relation(fields: [user_id], references: [id])
-
-  @@index([mission_id], map: "user_mission_mission_id_fkey")
-  @@index([user_id], map: "user_mission_user_id_fkey")
-}
->>>>>>> 5483bbb (feat: store mission list api)
-=======
 model UserMission {
   id         Int     @id @default(autoincrement())
   userId     Int
@@ -170,4 +89,18 @@ model UserMission {
   @@index([userId], map: "user_mission_user_id_fkey")
   @@map("user_mission")
 }
->>>>>>> a3a87db (feat: mission complete api)
+
+model UserStoreReview {
+  id         Int      @id @default(autoincrement())
+  store      Store    @relation(fields: [storeId], references: [id])
+  storeId    Int      @db.Int @map("store_id")
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int      @db.Int @map("user_id")
+  content    String   @db.Text
+  starRating Int      @map("star_rating")
+  
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @map("updated_at")
+
+  @@map("user_store_review")
+}
