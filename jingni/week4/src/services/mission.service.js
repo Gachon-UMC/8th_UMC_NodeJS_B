@@ -24,7 +24,7 @@ export const addMission = async (data) =>{
 
     const mission = await getMissionFromDB(newMissionId);
 
-    return responseFromMission(mission[0]);
+    return responseFromMission(mission);
 }
 
 
