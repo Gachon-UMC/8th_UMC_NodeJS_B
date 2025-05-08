@@ -1,10 +1,11 @@
 export const bodyToMission = (body) => {
+    const deadline = new Date(body.deadline);
 
     return {
         title: body.title,
         content: body.content,
         point: body.point,
-        deadline: body.deadline,
+        deadline: deadline,
         inactive_data: null,
         store_id: body.store_id,
     }

@@ -3,7 +3,7 @@ import { bodyToMission, bodyToDoMission } from "../dtos/mission.dto.js";
 import { addMission, modifyMission } from "../services/mission.service.js";
 
 export const handleAddMission = async (req, res, next) => {
-  console.log("미션 작성을 요청했습니다!");
+  console.log("미션 추가를 요청했습니다!");
   
   const mission = await addMission(
     bodyToMission(

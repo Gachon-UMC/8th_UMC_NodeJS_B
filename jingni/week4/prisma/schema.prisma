@@ -26,6 +26,7 @@ model User {
 
   favorCategories UserFavorCategory[]
   writtenReviews Review[]
+  doMission DoMission[]
 
   @@map("user")
 }
@@ -58,6 +59,7 @@ model Store{
   address       String        @db.VarChar(255)
   status        Int           @db.Int 
   review        Review[]
+  mission       Mission[]
 
   @@map("store")
 }
@@ -74,4 +76,32 @@ model Review{
   store         Store          @relation(fields:[storeId],references:[id])
 
   @@map("review")
+}
+
+model Mission{
+  id          Int             @id @default(autoincrement())
+  title       String          @db.VarChar(40)
+  content     String          @db.Text
+  point       Int             @db.Int
+  deadline    DateTime        @db.DateTime
+
+  storeId     Int             @db.Int @map("store_id")
+  store       Store           @relation(fields: [storeId], references: [id])
+
+  doMission DoMission[] 
+
+  @@map("mission")
+}
+
+model DoMission{
+  id          Int             @id @default(autoincrement())
+  status      Int             @db.Int
+
+  userId      Int             @db.Int @map("user_id")
+  missionId   Int              @db.Int @map("mission_id")
+
+  user         User      @relation(fields: [userId], references: [id])
+  mission      Mission   @relation(fields: [missionId], references: [id])
+
+  @@map("do_mission")
 }

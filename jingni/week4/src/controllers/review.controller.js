@@ -13,10 +13,6 @@ export const handleAddReview = async (req, res, next) => {
     return res.status(StatusCodes.UNAUTHORIZED).json({ message: "로그인이 필요합니다." });
   }
 
-  console.log(storeId);
-  console.log(userId)
-  console.log(req.body)
-  
   const review = await addReview(
     bodyToReview({
         ...req.body,
