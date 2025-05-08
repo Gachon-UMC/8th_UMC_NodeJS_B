@@ -21,7 +21,7 @@ export const addReview = async (data) =>{
 
     const review = await getReviewToDB(newReviewId);
 
-    return responseFromReview(review[0]);
+    return responseFromReview(review);
 }
 
 export const showReviews = async (storeId, cursor) => {
