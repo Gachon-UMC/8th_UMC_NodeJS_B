@@ -65,7 +65,7 @@ model UserStoreReview{
 
 model Mission {
   id           Int            @id @default(autoincrement())
-  storeId      Int
+  storeId      Int            @map("store_id")
   content      String         @db.VarChar(50)
   deadline     DateTime       @db.Date
   reward       Int
@@ -79,9 +79,9 @@ model Mission {
 
 model UserMission {
   id         Int     @id @default(autoincrement())
-  userId     Int
-  missionId  Int
-  isFinished Int
+  userId     Int     @map("user_id")
+  missionId  Int     @map("mission_id")
+  isFinished Int     @map("is_finished")
   mission    Mission @relation(fields: [missionId], references: [id])
   user       User    @relation(fields: [userId], references: [id])
 
