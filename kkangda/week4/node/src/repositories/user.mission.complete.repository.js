@@ -14,13 +14,29 @@ export const updateUserMission = async (data) => {
             data: { isFinished: 1 },
         });
 
-        return updated.id;
+        return updated;
     } catch (error) {
         throw error;
     }
 };
 
-export const getUserMission = async (id) => {
-    const userMission = await prisma.userMission.findFirstOrThrow({ where: { id: id } });
-    return userMission;
+export const getUserMission = async (updated) => {
+    const completedmissions = await prisma.userMission.findMany({
+        where: {
+            userId: updated.userId,
+            isFinished: 1,
+        },
+    });
+
+    // missionId만 배열로 추출
+    const missionIds = completedmissions.map((mission) => mission.missionId);
+
+    const missions = await prisma.mission.findMany({
+        select: { id: true, store: true, content: true, reward: true },
+        where: {
+            id: { in: missionIds },
+        },
+    });
+
+    return missions;
 };
