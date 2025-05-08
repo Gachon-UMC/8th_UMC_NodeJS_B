@@ -17,7 +17,7 @@ model User {
   detailAddress    String?           @map("detail_address") @db.VarChar(255)
   phone            String            @map("phone") @db.Char(11)
   foodPreference   FoodPreference[]
-  user_mission     user_mission[]
+  userMission      UserMission[]
   userStoreReviews UserStoreReview[]
 
   @@map("user")
@@ -44,19 +44,25 @@ model FoodPreference {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 model Store{
   id Int @id @default(autoincrement())
   name String @db.VarChar(50)
   userStoreReviews  UserStoreReview[]
   missions Mission[]
 =======
+=======
+>>>>>>> a3a87db (feat: mission complete api)
 model Store {
   id               Int               @id @default(autoincrement())
   name             String            @db.VarChar(50)
   mission          Mission[]
   userStoreReviews UserStoreReview[]
 
+<<<<<<< HEAD
 >>>>>>> 5483bbb (feat: store mission list api)
+=======
+>>>>>>> a3a87db (feat: mission complete api)
   @@map("store")
 }
 
@@ -69,6 +75,7 @@ model UserStoreReview {
   store      Store  @relation(fields: [storeId], references: [id])
   user       User   @relation(fields: [userId], references: [id])
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 model UserStoreReview{
   id Int @id @default(autoincrement())
@@ -113,16 +120,31 @@ model UserMission{
 model Mission {
   id           Int            @id @default(autoincrement())
   storeId      Int            @map("store_id")
+=======
+  @@index([storeId], map: "user_store_review_store_id_fkey")
+  @@index([userId], map: "user_store_review_user_id_fkey")
+  @@map("user_store_review")
+}
+
+model Mission {
+  id           Int            @id @default(autoincrement())
+  storeId      Int
+>>>>>>> a3a87db (feat: mission complete api)
   content      String         @db.VarChar(50)
   deadline     DateTime       @db.Date
   reward       Int
   store        Store          @relation(fields: [storeId], references: [id])
+<<<<<<< HEAD
   user_mission user_mission[]
+=======
+  userMission UserMission[]
+>>>>>>> a3a87db (feat: mission complete api)
 
   @@index([storeId], map: "mission_store_id_fkey")
   @@map("mission")
 }
 
+<<<<<<< HEAD
 model user_mission {
   id         Int     @id @default(autoincrement())
   user_id    Int
@@ -135,3 +157,17 @@ model user_mission {
   @@index([user_id], map: "user_mission_user_id_fkey")
 }
 >>>>>>> 5483bbb (feat: store mission list api)
+=======
+model UserMission {
+  id         Int     @id @default(autoincrement())
+  userId     Int
+  missionId  Int
+  isFinished Int
+  mission    Mission @relation(fields: [missionId], references: [id])
+  user       User    @relation(fields: [userId], references: [id])
+
+  @@index([missionId], map: "user_mission_mission_id_fkey")
+  @@index([userId], map: "user_mission_user_id_fkey")
+  @@map("user_mission")
+}
+>>>>>>> a3a87db (feat: mission complete api)

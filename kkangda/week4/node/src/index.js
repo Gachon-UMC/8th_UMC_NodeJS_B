@@ -7,10 +7,14 @@ import { handleStoreReview } from "./controllers/store.review.controller.js";
 import { handleStoreMission } from "./controllers/store.mission.controller.js";
 import { handleListStoreReviews } from "./controllers/store.controller.js";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { handleListUserReviews } from "./controllers/user.review.controller.js";
 =======
 import { handleListStoreMission } from "./controllers/get.store.mission.controller.js";
 >>>>>>> 5483bbb (feat: store mission list api)
+=======
+import { handleUserMissionComplete } from "./controllers/user.mission.complete.controller.js";
+>>>>>>> a3a87db (feat: mission complete api)
 
 dotenv.config();
 
@@ -36,7 +40,7 @@ app.post("/stores/:storeId/missions", handleStoreMission);
 
 app.get("/api/v1/stores/:storeId/reviews", handleListStoreReviews);
 
-app.get("/stores/:storeId/missions", handleListStoreMission);
+app.patch("/users/:userId/missions", handleUserMissionComplete);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
