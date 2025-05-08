@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,53 +8,68 @@ datasource db {
 }
 
 model User {
-  id            Int      @id @default(autoincrement())
-  email         String   @unique(map: "email") @db.VarChar(255)
-  name          String   @db.VarChar(10)
-  gender        Int      @db.TinyInt
-  birth         DateTime @db.Date
-  address       String   @db.VarChar(255)
-  detailAddress String?  @map("detail_address") @db.VarChar(255)
-  phone         String   @map("phone") @db.Char(11)
-
-  foodPreference FoodPreference[]
-  userStoreReviews  UserStoreReview[]
-  userMission UserMission[]
+  id               Int               @id @default(autoincrement())
+  email            String            @unique(map: "email") @db.VarChar(255)
+  name             String            @db.VarChar(10)
+  gender           Int               @db.TinyInt
+  birth            DateTime          @db.Date
+  address          String            @db.VarChar(255)
+  detailAddress    String?           @map("detail_address") @db.VarChar(255)
+  phone            String            @map("phone") @db.Char(11)
+  foodPreference   FoodPreference[]
+  user_mission     user_mission[]
+  userStoreReviews UserStoreReview[]
 
   @@map("user")
 }
 
-
 model FoodCategory {
-  id   Int    @id @default(autoincrement())
-  category String @db.VarChar(10)
-
+  id             Int              @id @default(autoincrement())
+  category       String           @db.VarChar(10)
   foodPreference FoodPreference[]
 
   @@map("food_category")
 }
 
 model FoodPreference {
-  id           Int        @id @default(autoincrement())
-  user           User         @relation(fields: [userId], references: [id])
+  id             Int          @id @default(autoincrement())
   userId         Int          @map("member_id")
-  foodCategory   FoodCategory @relation(fields: [foodCategoryId], references: [id])
   foodCategoryId Int          @map("food_category_id")
+  foodCategory   FoodCategory @relation(fields: [foodCategoryId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
 
   @@index([foodCategoryId], map: "f_category_id")
   @@index([userId], map: "user_id")
   @@map("food_preference")
 }
 
+<<<<<<< HEAD
 model Store{
   id Int @id @default(autoincrement())
   name String @db.VarChar(50)
   userStoreReviews  UserStoreReview[]
   missions Mission[]
+=======
+model Store {
+  id               Int               @id @default(autoincrement())
+  name             String            @db.VarChar(50)
+  mission          Mission[]
+  userStoreReviews UserStoreReview[]
+
+>>>>>>> 5483bbb (feat: store mission list api)
   @@map("store")
 }
 
+model UserStoreReview {
+  id         Int    @id @default(autoincrement())
+  storeId    Int    @map("store_id")
+  userId     Int    @map("user_id")
+  content    String @db.Text
+  starRating Int    @default(5)
+  store      Store  @relation(fields: [storeId], references: [id])
+  user       User   @relation(fields: [userId], references: [id])
 
+<<<<<<< HEAD
 model UserStoreReview{
   id Int @id @default(autoincrement())
   store Store @relation(fields:[storeId],references:[id])
@@ -95,3 +104,34 @@ model UserMission{
   @@map("user_mission")
 }
 
+=======
+  @@index([storeId], map: "user_store_review_store_id_fkey")
+  @@index([userId], map: "user_store_review_user_id_fkey")
+  @@map("user_store_review")
+}
+
+model Mission {
+  id           Int            @id @default(autoincrement())
+  storeId      Int            @map("store_id")
+  content      String         @db.VarChar(50)
+  deadline     DateTime       @db.Date
+  reward       Int
+  store        Store          @relation(fields: [storeId], references: [id])
+  user_mission user_mission[]
+
+  @@index([storeId], map: "mission_store_id_fkey")
+  @@map("mission")
+}
+
+model user_mission {
+  id         Int     @id @default(autoincrement())
+  user_id    Int
+  mission_id Int
+  isFinished Int
+  mission    Mission @relation(fields: [mission_id], references: [id])
+  user       User    @relation(fields: [user_id], references: [id])
+
+  @@index([mission_id], map: "user_mission_mission_id_fkey")
+  @@index([user_id], map: "user_mission_user_id_fkey")
+}
+>>>>>>> 5483bbb (feat: store mission list api)
