@@ -32,6 +32,7 @@ export const MyOngoingMission = async (userId, cursor) => {
         },
         take: 5,
     });
+    console.log("data", data);
     const converData = convertBigIntToString(data);
     return converData;
 };

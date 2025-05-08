@@ -56,7 +56,7 @@ export const handleGetMyOngoingMission = async (req, res) => {
     console.log("내 미션 조회 요청했습니다.");
     const userId = req.params.userId;
     const cursor = req.query.cursor;
-    console.log(typeof userId);
+    console.log("userId", userId, cursor);
     const onGoingMission = await getMyOngoingMission(
         parseInt(userId),
         typeof cursor === "string" ? parseInt(cursor) : 0
