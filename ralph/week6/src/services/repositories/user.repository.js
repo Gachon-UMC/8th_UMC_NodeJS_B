@@ -95,22 +95,6 @@ export const getUserPreferencesByUserId = async (userId) => {
             },
         },
     });
-    // try {
-    //     const [preferences] = await pool.query(
-    //         "SELECT ufc.id, ufc.category_id, ufc.user_id, fcl.kind " +
-    //             "FROM user_category ufc JOIN category fcl on ufc.category_id = fcl.id " +
-    //             "WHERE ufc.user_id = ? ORDER BY ufc.category_id ASC;",
-    //         userId
-    //     );
-    //     console.log("preferences", preferences);
-    //     return preferences;
-    // } catch (err) {
-    //     throw new Error(
-    //         `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
-    //     );
-    // } finally {
-    //     conn.release();
-    // }
     const convertPreferences = convertBigIntToString(preferences);
     return convertPreferences;
 };
