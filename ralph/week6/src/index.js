@@ -6,7 +6,15 @@ import {
     handleAddMission,
     handleAddReview,
     handleAddChallenge,
+
     handleGetStoreMission,
+
+
+    handleGetMyOngoingMission,
+
+    handleUpdateMission,
+
+
 } from "./controllers/user.controller.js";
 dotenv.config();
 
@@ -30,7 +38,14 @@ app.post("/api/v1/mission/:storeid/users", handleAddMission);
 
 app.post("/api/v1/store/:storeid/reviews", handleAddReview);
 
+
 app.get("/api/v1/store/:storeId/missions", handleGetStoreMission);
+
+
+app.get("/api/v1/missions/:userId", handleGetMyOngoingMission);
+
+app.patch("/api/v1/mission/:userId/:missionId", handleUpdateMission);
+
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

@@ -7,7 +7,15 @@ import { bodyToAddMission } from "../dtos/addMission.dto.js";
 import { addMissionStore } from "../services/addMission.service.js";
 import { addReviewStore } from "../services/review.service.js";
 import { bodyToReview } from "../dtos/review.dto.js";
+
 import { getStoreMission } from "../services/getStoreMission.service.js";
+
+
+import { getMyOngoingMission } from "../services/getMyOngoingMission.service.js";
+
+import { updateMission } from "../services/updateMission.service.js";
+
+
 export const handleUserSignUp = async (req, res) => {
     console.log("회원가입을 요청했습니다!");
     console.log("body:", req.body); // 값이 잘 들어오나 확인하기 위한 테스트용
@@ -52,6 +60,7 @@ export const handleAddReview = async (req, res) => {
     res.status(StatusCodes.OK).json({ result: review });
 };
 
+
 export const handleGetStoreMission = async (req, res) => {
     console.log(`${req.params.storeId}의 미션을 조회하셨습니다.`);
     const storeId = req.params.storeId;
@@ -61,4 +70,25 @@ export const handleGetStoreMission = async (req, res) => {
         typeof cursor === "string" ? parseInt(cursor) : 0
     );
     res.status(StatusCodes.OK).json({ result: mission });
+
+
+export const handleGetMyOngoingMission = async (req, res) => {
+    console.log("내 미션 조회 요청했습니다.");
+    const userId = req.params.userId;
+    const cursor = req.query.cursor;
+    console.log("userId", userId, cursor);
+    const onGoingMission = await getMyOngoingMission(
+        parseInt(userId),
+        typeof cursor === "string" ? parseInt(cursor) : 0
+    );
+    res.status(StatusCodes.OK).json({ result: onGoingMission });
+
+export const handleUpdateMission = async (req, res) => {
+    console.log("미션 업데이트 요청했습니다.");
+    const userId = req.params.userId;
+    const missionId = req.params.missionId;
+    const mission = await updateMission(userId, missionId);
+    res.status(StatusCodes.OK).json({ result: mission });
+
+
 };
