@@ -6,6 +6,7 @@ import {
     handleAddMission,
     handleAddReview,
     handleAddChallenge,
+    handleStoreReviewList,
     handleMyReviewList,
     handleGetStoreMission,
     handleGetMyOngoingMission,
@@ -24,14 +25,18 @@ app.use(express.urlencoded({ extended: false })); // 단순 객체 문자열 형
 app.get("/", (req, res) => {
     res.send("Hello World!");
 });
-
+// 회원가입
 app.post("/api/v1/users/signup", handleUserSignUp);
-
-app.post("/api/v1/missions/:missionId/", handleAddChallenge);
-
+//
+app.post("/api/v1/missions/:missionId", handleAddChallenge);
+// 미션 추가
 app.post("/api/v1/mission/:storeid/users", handleAddMission);
-
+// 리뷰 추가
 app.post("/api/v1/store/:storeid/reviews", handleAddReview);
+
+
+// 미션 목록 조회
+app.get("/api/v1/stores/:storeid/reviews", handleStoreReviewList);
 
 app.get("/api/v1/stores/:userId/reviews", handleMyReviewList);
 
@@ -40,6 +45,7 @@ app.get("/api/v1/store/:storeId/missions", handleGetStoreMission);
 app.get("/api/v1/missions/:userId", handleGetMyOngoingMission);
 
 app.patch("/api/v1/mission/:userId/:missionId", handleUpdateMission);
+
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

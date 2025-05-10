@@ -7,14 +7,10 @@ import { bodyToAddMission } from "../dtos/addMission.dto.js";
 import { addMissionStore } from "../services/addMission.service.js";
 import { addReviewStore } from "../services/review.service.js";
 import { bodyToReview } from "../dtos/review.dto.js";
-
+import { getStoreReviewList } from "../services/storeReviewList.service.js";
 import { MyReviewList } from "../services/MyReviewList.service.js";
-
 import { getStoreMission } from "../services/getStoreMission.service.js";
-
-
 import { getMyOngoingMission } from "../services/getMyOngoingMission.service.js";
-
 import { updateMission } from "../services/updateMission.service.js";
 
 export const handleUserSignUp = async (req, res) => {
@@ -49,6 +45,7 @@ export const handleAddMission = async (req, res) => {
     // console.log(mission);
     res.status(StatusCodes.OK).json({ result: mission });
 };
+
 export const handleAddReview = async (req, res) => {
     console.log("리뷰 작성 요청했습니다.");
     const storeId = req.params.storeid;
@@ -61,6 +58,16 @@ export const handleAddReview = async (req, res) => {
     res.status(StatusCodes.OK).json({ result: review });
 };
 
+export const handleStoreReviewList = async (req, res) => {
+    console.log("리뷰 목록 요청했습니다.");
+    const storeId = req.params.storeid;
+    // console.log(storeId);
+    const reviewList = await getStoreReviewList(
+        parseInt(storeId),
+        typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0
+    );
+
+    res.status(StatusCodes.OK).json({ result: reviewList });
 
 export const handleMyReviewList = async (req, res) => {
     console.log("내 리뷰 목록 요청했습니다.");
@@ -72,7 +79,6 @@ export const handleMyReviewList = async (req, res) => {
     );
     res.status(StatusCodes.OK).json({ result: reviewList });
 
-
 export const handleGetStoreMission = async (req, res) => {
     console.log(`${req.params.storeId}의 미션을 조회하셨습니다.`);
     const storeId = req.params.storeId;
@@ -82,7 +88,6 @@ export const handleGetStoreMission = async (req, res) => {
         typeof cursor === "string" ? parseInt(cursor) : 0
     );
     res.status(StatusCodes.OK).json({ result: mission });
-
 
 export const handleGetMyOngoingMission = async (req, res) => {
     console.log("내 미션 조회 요청했습니다.");

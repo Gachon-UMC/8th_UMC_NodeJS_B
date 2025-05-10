@@ -159,3 +159,4 @@ enum user_mission_status {
   completed @map("2")
 }
 
+
