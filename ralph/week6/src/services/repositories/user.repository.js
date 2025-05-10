@@ -2,7 +2,7 @@ import { pool, prisma } from "../../db.config.js";
 
 // User 데이터 삽입
 export const addUser = async (data) => {
-    const user = await prisma.user.findFrist({
+    const user = await prisma.user.findFirst({
         where: {
             email: data.email,
         },
