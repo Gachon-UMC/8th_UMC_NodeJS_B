@@ -1,28 +1,33 @@
 import { pool } from "../../db.config.js";
+import { prisma } from "../../db.config.js";
+function convertBigIntToString(obj) {
+    return JSON.parse(
+        JSON.stringify(obj, (key, value) =>
+            typeof value === "bigint" ? Number(value) : value
+        )
+    );
+}
 export const addReview = async (data) => {
-    const conn = await pool.getConnection();
+    console.log("addReview", data);
+    const created = await prisma.review.create({
+        data: {
+            user_id: data.user_id,
+            store_id: data.store_id,
+            review_point: data.review_point,
+            content: data.content,
+        },
+    });
+    return created.id;
+};
 
-    try {
-        const [confirm] = await pool.query(
-            `SELECT EXISTS(SELECT 1 FROM store WHERE id = ?) as isExistStore;`,
-            [data.store_id]
-        );
-
-        if (!confirm[0].isExistStore) {
-            return null; // 존재하지 않는 store에는 리뷰 등록 불가
-        }
-
-        const [result] = await pool.query(
-            `INSERT INTO review (user_id, store_id, review_point, content) VALUES (?, ?, ?, ?);`,
-            [data.user_id, data.store_id, data.review_point, data.content]
-        );
-
-        return result.insertId;
-    } catch (err) {
-        throw new Error(
-            `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
-        );
-    } finally {
-        conn.release();
-    }
+export const getFirstReview = async (store_id) => {
+    const getFirstReview = await prisma.review.findFirst({
+        where: {
+            id: store_id,
+        },
+    });
+    console.log;
+    const convertFirstReview = convertBigIntToString(getFirstReview);
+    console.log("getFirstReview", convertFirstReview);
+    return convertFirstReview;
 };

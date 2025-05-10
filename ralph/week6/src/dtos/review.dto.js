@@ -4,6 +4,7 @@ export const bodyToReview = (data) => {
         store_id: data.store_id,
         review_point: data.review_point,
         content: data.content,
+        name: data.name,
     };
 };
 
