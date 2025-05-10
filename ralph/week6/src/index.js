@@ -34,6 +34,9 @@ app.post("/api/v1/mission/:storeid/users", handleAddMission);
 // 리뷰 추가
 app.post("/api/v1/store/:storeid/reviews", handleAddReview);
 
+app.post("/api/v1/missions/:missionId", handleAddChallenge);
+
+app.post("/api/v1/mission/:storeid", handleAddMission);
 
 // 미션 목록 조회
 app.get("/api/v1/stores/:storeid/reviews", handleStoreReviewList);
