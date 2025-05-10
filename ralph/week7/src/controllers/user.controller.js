@@ -22,27 +22,24 @@ export const handleUserSignUp = async (req, res) => {
 
 export const handleAddChallenge = async (req, res) => {
     console.log("미션 도전하기를 요청했습니다.");
-    console.log(req.body);
     const missionId = req.params.missionId;
-    // const userId = req.user.id;  // 이렇게 하면
-    const userId = Math.floor(Math.random() * 20) + 1; // userId 를 모르기 임의로 id 가 생성되도록 함
-    // 이렇게 안하면 userId 와 movieId 가 기존에 DB 에 있는거랑 중복되어서 오류가 발생
-
+    const userId = req.params.userId;
+    // const userId = Math.floor(Math.random() * 20) + 1; // userId 를 모르기 임의로 id 가 생성되도록 함
+    // // 이렇게 안하면 userId 와 movieId 가 기존에 DB 에 있는거랑 중복되어서 오류가 발생
     const patchMission = await addChallengeMission(
         bodyToAddChallenge({ missionId, userId })
     );
-    console.log(StatusCodes.OK);
     res.status(StatusCodes.OK).success(patchMission);
 };
 
 export const handleAddMission = async (req, res) => {
     const storeId = req.params.storeid;
     console.log("미션 추가 요청했습니다.");
-    // console.log(req.body);
+    console.log(req.body);
     const mission = await addMissionStore(
         bodyToAddMission({ ...req.body, store_id: storeId })
     );
-    // console.log(mission);
+    console.log(mission);
     res.status(StatusCodes.OK).success(mission);
 };
 
@@ -71,6 +68,7 @@ export const handleStoreReviewList = async (req, res) => {
 export const handleMyReviewList = async (req, res) => {
     console.log("내 리뷰 목록 요청했습니다.");
     const userId = req.params.userId;
+    console.log(userId);
     console.log(typeof req.query.cursor);
     const reviewList = await MyReviewList(
         parseInt(userId),
@@ -99,10 +97,12 @@ export const handleGetMyOngoingMission = async (req, res) => {
     );
     res.status(StatusCodes.OK).success(onGoingMission);
 };
+
 export const handleUpdateMission = async (req, res) => {
     console.log("미션 업데이트 요청했습니다.");
     const userId = req.params.userId;
     const missionId = req.params.missionId;
     const mission = await updateMission(userId, missionId);
+    console.log(mission);
     res.status(StatusCodes.OK).success(mission);
 };

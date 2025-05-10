@@ -8,8 +8,6 @@ import {
 } from "./repositories/user.repository.js";
 
 export const userSignUp = async (data) => {
-    // console.log(data);
-    console.log(data.gender);
     const joinUserId = await addUser({
         data: {
             name: data.name,

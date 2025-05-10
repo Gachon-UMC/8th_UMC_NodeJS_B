@@ -1,25 +1,29 @@
-import { pool } from "../../db.config.js";
-export const addChallenge = async (data) => {
-    const conn = await pool.getConnection();
-    try {
-        const [confirm] = await conn.query(
-            `SELECT EXISTS(SELECT 1 FROM user_mission WHERE mission_id = ? AND user_id =? ) as isExistEmail;`,
-            [data.missionId, data.userId]
-        );
+import { convertBigIntToString } from "../../convertType.js";
+import { prisma } from "../../db.config.js";
 
-        if (confirm[0].isExistChallenge) {
+export const addChallenge = async (data) => {
+    try {
+        const challengeId = await prisma.user_mission.create({
+            data: {
+                user_id: data.userId,
+                mission_id: data.missionId,
+                status: "onGoing",
+            },
+        });
+        return challengeId;
+    } catch (err) {
+        if (err.code === "P2002") {
             return null;
         }
-
-        const [result] = await conn.query(
-            `INSERT INTO user_mission (user_id,mission_id,created_at ) VALUES (?, ?, ?);`,
-            [data.userId, data.missionId, data.created_at]
-        );
-    } catch (err) {
-        throw new Error(
-            `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
-        );
-    } finally {
-        conn.release();
     }
+};
+
+export const findChallenge = async ({ challengeId }) => {
+    const challenge = await prisma.user_mission.findFirst({
+        where: {
+            id: challengeId,
+        },
+    });
+    const convertChallenge = convertBigIntToString(challenge);
+    return convertChallenge;
 };

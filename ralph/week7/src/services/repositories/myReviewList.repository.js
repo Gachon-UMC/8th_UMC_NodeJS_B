@@ -7,7 +7,7 @@ function convertBigIntToString(obj) {
     );
 }
 export const getMyReviewList = async (userId, cursor) => {
-    console.log("userId2", userId);
+    console.log("userId", userId, cursor);
     const data = await prisma.review.findMany({
         select: {
             id: true,
@@ -23,10 +23,12 @@ export const getMyReviewList = async (userId, cursor) => {
         },
         where: {
             user_id: userId,
+            id: { gt: cursor },
         },
         orderBy: { id: "asc" },
         take: 5,
     });
+    console.log("data", data);
     const reviewList = convertBigIntToString(data);
     return reviewList;
 };
