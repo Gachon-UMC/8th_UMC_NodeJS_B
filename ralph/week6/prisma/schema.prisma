@@ -148,12 +148,14 @@ model user_category {
 }
 
 model user_mission {
+
   id         BigInt              @id @default(autoincrement())
   user_id    BigInt
   mission_id BigInt
   status     user_mission_status @default(dbgenerated("0"))
   mission    mission             @relation(fields: [mission_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_mission_mission_id_fk")
   user       User                @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_mission_user_id_fk")
+
 
   @@index([mission_id], map: "user_mission_mission_id_fk")
   @@index([user_id], map: "user_mission_user_id_fk")
@@ -169,3 +171,4 @@ enum user_mission_status {
   onGoing @map("1")
   completed @map("2")
 }
+
