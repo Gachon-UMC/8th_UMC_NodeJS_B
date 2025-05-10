@@ -8,13 +8,14 @@ import { addMissionStore } from "../services/addMission.service.js";
 import { addReviewStore } from "../services/review.service.js";
 import { bodyToReview } from "../dtos/review.dto.js";
 
+import { MyReviewList } from "../services/MyReviewList.service.js";
+
 import { getStoreMission } from "../services/getStoreMission.service.js";
 
 
 import { getMyOngoingMission } from "../services/getMyOngoingMission.service.js";
 
 import { updateMission } from "../services/updateMission.service.js";
-
 
 export const handleUserSignUp = async (req, res) => {
     console.log("회원가입을 요청했습니다!");
@@ -59,6 +60,17 @@ export const handleAddReview = async (req, res) => {
 
     res.status(StatusCodes.OK).json({ result: review });
 };
+
+
+export const handleMyReviewList = async (req, res) => {
+    console.log("내 리뷰 목록 요청했습니다.");
+    const userId = req.params.userId;
+    console.log(typeof req.query.cursor);
+    const reviewList = await MyReviewList(
+        parseInt(userId),
+        typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0
+    );
+    res.status(StatusCodes.OK).json({ result: reviewList });
 
 
 export const handleGetStoreMission = async (req, res) => {
