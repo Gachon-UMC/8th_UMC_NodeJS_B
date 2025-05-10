@@ -7,6 +7,10 @@ import {
     handleAddReview,
     handleAddChallenge,
     handleStoreReviewList,
+    handleMyReviewList,
+    handleGetStoreMission,
+    handleGetMyOngoingMission,
+    handleUpdateMission,
 } from "./controllers/user.controller.js";
 dotenv.config();
 
@@ -30,8 +34,18 @@ app.post("/api/v1/mission/:storeid/users", handleAddMission);
 // 리뷰 추가
 app.post("/api/v1/store/:storeid/reviews", handleAddReview);
 
+
 // 미션 목록 조회
 app.get("/api/v1/stores/:storeid/reviews", handleStoreReviewList);
+
+app.get("/api/v1/stores/:userId/reviews", handleMyReviewList);
+
+app.get("/api/v1/store/:storeId/missions", handleGetStoreMission);
+
+app.get("/api/v1/missions/:userId", handleGetMyOngoingMission);
+
+app.patch("/api/v1/mission/:userId/:missionId", handleUpdateMission);
+
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
