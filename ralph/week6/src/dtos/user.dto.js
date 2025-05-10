@@ -12,6 +12,7 @@ export const bodyToUser = (body) => {
     };
 };
 export const responseFromUser = ({ user, preferences }) => {
+    console.log("user", preferences);
     return {
         name: user.name,
         password: user.password,
@@ -23,7 +24,7 @@ export const responseFromUser = ({ user, preferences }) => {
         myPoint: user.my_point,
         preferences: preferences.map((pref) => ({
             id: pref.category_id,
-            name: pref.kind,
+            category: pref.category.kind,
         })),
     };
 };

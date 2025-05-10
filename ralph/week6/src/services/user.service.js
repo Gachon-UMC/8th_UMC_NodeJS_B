@@ -33,7 +33,7 @@ export const userSignUp = async (data) => {
 
     const user = await getUser(joinUserId);
     const preferences = await getUserPreferencesByUserId(joinUserId);
-    console.log(user);
+    console.log("user1", user);
     console.log(preferences);
     return responseFromUser({ user, preferences });
 };

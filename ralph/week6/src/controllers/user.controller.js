@@ -66,9 +66,8 @@ export const handleStoreReviewList = async (req, res) => {
         parseInt(storeId),
         typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0
     );
-
     res.status(StatusCodes.OK).json({ result: reviewList });
-
+};
 export const handleMyReviewList = async (req, res) => {
     console.log("내 리뷰 목록 요청했습니다.");
     const userId = req.params.userId;
@@ -78,7 +77,7 @@ export const handleMyReviewList = async (req, res) => {
         typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0
     );
     res.status(StatusCodes.OK).json({ result: reviewList });
-
+};
 export const handleGetStoreMission = async (req, res) => {
     console.log(`${req.params.storeId}의 미션을 조회하셨습니다.`);
     const storeId = req.params.storeId;
@@ -88,7 +87,7 @@ export const handleGetStoreMission = async (req, res) => {
         typeof cursor === "string" ? parseInt(cursor) : 0
     );
     res.status(StatusCodes.OK).json({ result: mission });
-
+};
 export const handleGetMyOngoingMission = async (req, res) => {
     console.log("내 미션 조회 요청했습니다.");
     const userId = req.params.userId;
@@ -99,13 +98,11 @@ export const handleGetMyOngoingMission = async (req, res) => {
         typeof cursor === "string" ? parseInt(cursor) : 0
     );
     res.status(StatusCodes.OK).json({ result: onGoingMission });
-
+};
 export const handleUpdateMission = async (req, res) => {
     console.log("미션 업데이트 요청했습니다.");
     const userId = req.params.userId;
     const missionId = req.params.missionId;
     const mission = await updateMission(userId, missionId);
     res.status(StatusCodes.OK).json({ result: mission });
-
-
 };
