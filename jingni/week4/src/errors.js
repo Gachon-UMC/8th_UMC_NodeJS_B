@@ -48,6 +48,16 @@ export class NoMissions extends Error{
   }
 }
 
+export class NotChallenging extends Error {
+  errorCode = "M004"
+
+  constructor (reason, data){
+    super(reason);
+    this.reason = reason;
+    this.data = data;
+  }
+}
+
 export class NoReviews extends Error{
   errorCode = "R002";
 

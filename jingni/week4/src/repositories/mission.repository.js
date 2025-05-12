@@ -1,5 +1,5 @@
 import { prisma } from "../db.config.js";
-import { IsChallenging, NotExistStoreId } from "../errors.js";
+import { IsChallenging, NotChallenging, NotExistStoreId } from "../errors.js";
 
 export const addMissionToDB = async (data) => {
 
@@ -132,7 +132,7 @@ export const updateMissionToDB = async (data) => {
         })
 
         if(!myDoingMission){
-            throw new Error("도전중인 미션이 아닙니다.");
+            throw new NotChallenging("도전중인 미션이 아닙니다.", data);
         }
 
         await prisma.doMission.updateMany({
