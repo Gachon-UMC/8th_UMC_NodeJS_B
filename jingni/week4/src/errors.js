@@ -17,3 +17,23 @@ export class NotExistStoreId extends Error {
     this.data = data;
   }
 }
+
+export class NotExistMissionId extends Error {
+  errorCode = "M001";
+
+  constructor (reason, data){
+    super(reason);
+    this.reason = reason;
+    this.data = data;
+  }
+}
+
+export class IsChallenging extends Error {
+  errorCode = "M002"
+
+  constructor (reason, data){
+    super(reason);
+    this.reason = reason;
+    this.data = data;
+  }
+}

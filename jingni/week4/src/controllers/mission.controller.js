@@ -34,7 +34,7 @@ export const handleUpdateMission = async (req,res, next) => {
           user_id:userId
       })
   )
-  res.status(StatusCodes.OK).json({result : updatedMission})
+  res.status(StatusCodes.OK).success(updatedMission)
 }
 
 export const handleStoreMissions = async(req,res,next) =>{

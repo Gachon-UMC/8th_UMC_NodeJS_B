@@ -1,4 +1,5 @@
 import { prisma } from "../db.config.js";
+import { IsChallenging } from "../errors.js";
 
 export const addMissionToDB = async (data) => {
 
@@ -67,6 +68,10 @@ export const updateMissionToDB = async (data) => {
     if(data.status ==1){
         const doMission = await prisma.doMission.findFirst({where: {missionId: data.mission_id}})
         if(!doMission){
+            const mission = await getMissionFromDB(data.mission_id);
+            if (!mission) {
+                return null; 
+            }
             //INSERT do_mission
             const createdDoMission = await prisma.doMission.create({
                 data:{
@@ -92,7 +97,7 @@ export const updateMissionToDB = async (data) => {
                 }})
 
             if(challenging){
-                throw new Error('이미 도전중인 미션입니다.');
+                throw new IsChallenging("이미 도전중인 미션입니다.", data);
             }
             
             await prisma.doMission.updateMany({

@@ -1,5 +1,5 @@
 import { responseFromMission, responseFromMissionList } from "../dtos/mission.dto.js";
-import { NotExistStoreId } from "../errors.js";
+import { NotExistMissionId, NotExistStoreId } from "../errors.js";
 
 import {
     addMissionToDB,
@@ -34,10 +34,11 @@ export const modifyMission = async (data) => {
     
     const updatedMissionId = await updateMissionToDB(data);
     if(updatedMissionId == null){
-        throw new Error("해당 미션을 찾을 수 없습니다.");
+        throw new NotExistMissionId("존재하지 않는 미션 ID 입니다.", data)
     }
 
-    return responseFromMission({mission_id : updatedMissionId});
+    const mission = getMissionFromDB(updatedMissionId)
+    return responseFromMission(mission);
 }
 
 export const showStoreMissions = async (storeId, cursor) => {
