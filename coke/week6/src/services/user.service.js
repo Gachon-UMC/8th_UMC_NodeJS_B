@@ -1,7 +1,7 @@
 import { addUser, getUserByEmail, getUserById } from "../repositories/user.repository.js";
 import { setUserCategoryPreference, getUserPreferencesByUserId } from "../repositories/user.repository.js";
 import { responseFromUser } from "../dtos/user.dto.js";
-import { DuplicateUserEmailError } from "../errorCode.js";
+import { DuplicateUserEmailError } from "../errorcode.js";
 
 export const userSignUp = async (userData) => {
   // 이메일 중복 확인
