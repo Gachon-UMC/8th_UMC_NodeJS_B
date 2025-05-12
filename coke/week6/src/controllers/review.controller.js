@@ -23,9 +23,18 @@ export const handleAddReview = async (req, res, next) => {
     };
     
     const review = await addReview(reviewData);
+
+    /*
     res.status(StatusCodes.CREATED).json({ result: review });
   } catch (error) {
     console.error("리뷰 추가 오류:", error);
     next(error);
   }
+    */
+  return res.status(StatusCodes.CREATED).success(review); // 수정된 코드
+  } catch (error) {
+    console.error("리뷰 추가 오류:", error);
+    next(error);
+  }
+  
 };

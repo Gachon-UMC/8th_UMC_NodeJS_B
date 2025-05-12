@@ -7,14 +7,12 @@ export const handleGetStore = async (req, res, next) => {
     const { storeId } = req.params;
     
     const store = await getStore(storeId);
-    res.status(StatusCodes.OK).json({ result: store });
+    // res.status(StatusCodes.OK).json({ result: store }); // 이전 코드
+    return res.status(StatusCodes.OK).success(store); // 수정된 코드
   } catch (error) {
     console.error("가게 정보 조회 오류:", error);
     
-    if (error.message === "존재하지 않는 가게입니다.") {
-      return res.status(StatusCodes.NOT_FOUND).json({ message: error.message });
-    }
-    
+    // 이 부분은 서비스 레이어로 이동해야 함 (오류 처리는 서비스에서)
     next(error);
   }
 };
@@ -26,14 +24,12 @@ export const handleGetStoreReviews = async (req, res, next) => {
     const { cursor, limit = 5 } = req.query;
     
     const result = await getStoreReviewList(storeId, cursor, parseInt(limit));
-    res.status(StatusCodes.OK).json({ result });
+    // res.status(StatusCodes.OK).json({ result }); // 이전 코드
+    return res.status(StatusCodes.OK).success(result); // 수정된 코드
   } catch (error) {
     console.error("가게 리뷰 목록 조회 오류:", error);
     
-    if (error.message === "존재하지 않는 가게입니다.") {
-      return res.status(StatusCodes.NOT_FOUND).json({ message: error.message });
-    }
-    
+    // 이 부분은 서비스 레이어로 이동해야 함 (오류 처리는 서비스에서)
     next(error);
   }
 };
@@ -44,7 +40,8 @@ export const handleGetReviewImages = async (req, res, next) => {
     const { reviewId } = req.params;
     
     const images = await getReviewImageList(reviewId);
-    res.status(StatusCodes.OK).json({ result: images });
+    // res.status(StatusCodes.OK).json({ result: images }); // 이전 코드
+    return res.status(StatusCodes.OK).success(images); // 수정된 코드
   } catch (error) {
     console.error("리뷰 이미지 조회 오류:", error);
     next(error);
@@ -57,7 +54,8 @@ export const handleGetReviewReplies = async (req, res, next) => {
     const { reviewId } = req.params;
     
     const replies = await getReviewReplyList(reviewId);
-    res.status(StatusCodes.OK).json({ result: replies });
+    // res.status(StatusCodes.OK).json({ result: replies }); // 이전 코드
+    return res.status(StatusCodes.OK).success(replies); // 수정된 코드
   } catch (error) {
     console.error("리뷰 답글 조회 오류:", error);
     next(error);
