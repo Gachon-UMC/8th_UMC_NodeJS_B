@@ -4,7 +4,7 @@ import { handleGetStore, handleGetStoreReviews, handleGetReviewImages, handleGet
 
 const router = express.Router();
 
-// 가게에 미션 추가 API - 테스트용으로 인증 미들웨어 제거 가능
+// 가게에 미션 추가
 router.post('/:storeId/missions', handleAddMission);
 
 // 가게 상세 정보 조회

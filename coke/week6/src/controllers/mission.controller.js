@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { addMission, participateMission } from "../services/mission.service.js";
+import { getStoreMissions } from "../repositories/mission.repository.js";
 
 // 가게에 미션 추가 기능
 export const handleAddMission = async (req, res, next) => {
@@ -74,6 +75,18 @@ export const handleParticipateMission = async (req, res, next) => {
     console.error("미션 참여 오류:", error);
 
     
+    next(error);
+  }
+};
+
+export const handleGetStoreMissions = async (req, res, next) => {
+  try {
+    const { storeId } = req.params;
+    
+    const missions = await getStoreMissions(storeId);
+    res.status(StatusCodes.OK).json({ result: missions });
+  } catch (error) {
+    console.error("가게 미션 목록 조회 오류:", error);
     next(error);
   }
 };
