@@ -2,7 +2,7 @@ import { prisma } from "../db.config.js";
 
 export const addReviewToDB = async (data) => {
 
-    console.log(data.store_id)
+    console.log("data.store_id",data.store_id)
     const store = await prisma.store.findFirst({where: {id:data.store_id} })
 
     if(!store){
