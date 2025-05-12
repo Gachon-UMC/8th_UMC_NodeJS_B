@@ -3,20 +3,38 @@ import express from "express";
 import cors from "cors";
 import path from 'path';
 import { fileURLToPath } from 'url';
-import userRouter from "./routers/user.router.js"; // 사용자 라우터
-import reviewRouter from './routers/review.router.js'; //리뷰 라우터
-import storeRouter from './routers/store.router.js'; //미션추가 라우터
+import userRouter from "./routers/user.router.js"; 
+import reviewRouter from './routers/review.router.js'; 
+import storeRouter from './routers/store.router.js'; 
 import missionRouter from './routers/mission.router.js';
 
-// __dirname 설정 
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// .env 파일이 상위 디렉토리에 있으므로 경로 지정
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const app = express();
-const port = process.env.PORT || 3000; // 기본값 설정
+const port = process.env.PORT || 3000;
+
+
+//공통 응답 사용할 수 있는 헬퍼 함수 등록
+
+app.use((req, res, next) => {
+  res.success = (success) => {
+    return res.json({ resultType: "SUCCESS", error: null, success });
+  };
+
+  res.error = ({ errorCode = "unknown", reason = null, data = null }) => {
+    return res.json({
+      resultType: "FAIL",
+      error: { errorCode, reason, data },
+      success: null,
+    });
+  };
+
+  next();
+});
 
 app.use(cors());
 app.use(express.static('public'));
@@ -34,6 +52,7 @@ app.use('/api/stores', storeRouter);
 app.use('/api/missions', missionRouter);
 
 // 에러 핸들링 미들웨어
+/*
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({
@@ -41,6 +60,22 @@ app.use((err, req, res, next) => {
     error: process.env.NODE_ENV === 'development' ? err.message : undefined
   });
 });
+*/
+
+ //전역 오류를 처리하기 위한 미들웨어
+
+ app.use((err, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  res.status(err.statusCode || 500).error({
+    errorCode: err.errorCode || "unknown",
+    reason: err.reason || err.message || null,
+    data: err.data || null,
+  });
+});
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

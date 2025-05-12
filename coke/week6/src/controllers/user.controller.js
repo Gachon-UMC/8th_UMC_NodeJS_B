@@ -21,5 +21,8 @@ export const handleUserSignUp = async (req, res, next) => {
     }
     
     next(error);
+    
   }
+
+  res.status(StatusCodes.OK).success(user);
 };

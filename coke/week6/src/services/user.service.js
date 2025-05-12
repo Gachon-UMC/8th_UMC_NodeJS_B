@@ -1,13 +1,16 @@
-// user.service.js
 import { addUser, getUserByEmail, getUserById } from "../repositories/user.repository.js";
 import { setUserCategoryPreference, getUserPreferencesByUserId } from "../repositories/user.repository.js";
 import { responseFromUser } from "../dtos/user.dto.js";
+import { DuplicateUserEmailError } from "../errorCode.js";
 
 export const userSignUp = async (userData) => {
   // 이메일 중복 확인
   const existingUser = await getUserByEmail(userData.email);
   if (existingUser) {
-    throw new Error("이미 존재하는 이메일입니다.");
+
+    //기존 오류코드:
+    //throw new Error("이미 존재하는 이메일입니다.");
+    throw new DuplicateUserEmailError("이미 존재하는 이메일입니다.", userData);
   }
   
   // 테스트 환경에서는 간단하게 비밀번호 처리
