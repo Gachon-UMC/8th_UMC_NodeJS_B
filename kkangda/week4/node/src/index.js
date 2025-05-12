@@ -55,8 +55,6 @@ app.get("/api/v1/stores/:storeId/reviews", handleListStoreReviews);
 
 app.patch("/users/:userId/missions", handleUserMissionComplete);
 
-<<<<<<< HEAD
-=======
 app.get("/stores/:storeId/missions", handleListStoreMission);
 
 app.get("/users/:userId/reviews", handleListUserReviews);

@@ -8,5 +8,9 @@ export const getAllStoreMission = async (storeId, cursor) => {
         take: 5,
     });
 
+    if (missions.length === 0) {
+        return null;
+    }
+
     return missions;
 };

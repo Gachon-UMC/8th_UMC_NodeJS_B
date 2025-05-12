@@ -8,5 +8,9 @@ export const getAllUserReviews = async (userId, cursor) => {
         take: 5,
     });
 
+    if (reviews.length === 0) {
+        return null;
+    }
+
     return reviews;
 };

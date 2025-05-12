@@ -1,4 +1,5 @@
 import { responseFromUserMission } from "../dtos/user.mission.dto.js";
+import { DuplicateUserEmailError } from "../errors.js";
 import { addUserMission, getUserMission } from "../repositories/user.mission.repository.js";
 
 export const userMission = async (data) => {
@@ -9,7 +10,7 @@ export const userMission = async (data) => {
     });
 
     if (userMissionId === null) {
-        throw new Error("이미 도전 중인 미션입니다.");
+        throw new DuplicateUserEmailError("이미 도전 중인 미션입니다.", data);
     }
 
     const result = await getUserMission(userMissionId);
