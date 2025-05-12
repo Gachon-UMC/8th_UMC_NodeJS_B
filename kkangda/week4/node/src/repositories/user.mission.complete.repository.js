@@ -1,4 +1,5 @@
 import { prisma } from "../db.config.js";
+import { DuplicateUserEmailError } from "../errors.js";
 
 export const updateUserMission = async (data) => {
     try {
@@ -6,6 +7,7 @@ export const updateUserMission = async (data) => {
             where: {
                 userId: data.userId,
                 missionId: data.missionId,
+                isFinished: 0,
             },
         });
 
@@ -16,7 +18,7 @@ export const updateUserMission = async (data) => {
 
         return updated;
     } catch (error) {
-        throw error;
+        throw new DuplicateUserEmailError("예외 발생", data);
     }
 };
 
