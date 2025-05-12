@@ -1,15 +1,15 @@
-export const bodyToMission = (body) => {
+export const bodyToMission = (body, storeId) => {
     return {
-        store_id: 1,
+        storeId: storeId,
         content: body.content,
-        deadline: body.deadline,
+        deadline: new Date(body.deadline),
         reward: body.reward,
     };
 };
 
 export const responseFromMission = (body) => {
     return {
-        store_name: body.store_name,
+        store_name: body.storeName,
         content: body.content,
         deadline: body.deadline,
         reward: body.reward,

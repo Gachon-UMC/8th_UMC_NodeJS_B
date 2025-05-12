@@ -1,15 +1,15 @@
-export const bodyToReview = (body) => {
+export const bodyToReview = (body, storeId) => {
     return {
-        member_id: 1,
-        store_id: 1,
-        star_rating: body.star_rating,
+        userId: 1,
+        storeId: storeId,
+        starRating: body.starRating,
         content: body.content,
     };
 };
 
 export const responseFromReview = (body) => {
     return {
-        star_rating: body.star_rating,
+        star_rating: body.starRating,
         content: body.content,
     };
 };
