@@ -1,18 +1,19 @@
 import { addUser, getUserByEmail, getUserById } from "../repositories/user.repository.js";
 import { setUserCategoryPreference, getUserPreferencesByUserId } from "../repositories/user.repository.js";
 import { responseFromUser } from "../dtos/user.dto.js";
-import { DuplicateUserEmailError } from "../errorcode.js";
 
 export const userSignUp = async (userData) => {
   // 이메일 중복 확인
+  /* 기존 코드
   const existingUser = await getUserByEmail(userData.email);
   if (existingUser) {
-
-    //기존 오류코드:
-    //throw new Error("이미 존재하는 이메일입니다.");
+    throw new Error("이미 존재하는 이메일입니다.");
+  }
+*/
+const existingUser = await getUserByEmail(userData.email);
+  if (existingUser) {
     throw new DuplicateUserEmailError("이미 존재하는 이메일입니다.", userData);
   }
-  
   // 테스트 환경에서는 간단하게 비밀번호 처리
   const passwordHash = userData.password + "_hashed"; // 단순히 접미사 추가 (테스트용)
   

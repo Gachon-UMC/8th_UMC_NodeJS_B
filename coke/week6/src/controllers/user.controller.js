@@ -10,7 +10,9 @@ export const handleUserSignUp = async (req, res, next) => {
     const userData = bodyToUser(req.body);
     const user = await userSignUp(userData);
     
+    
     res.status(StatusCodes.CREATED).json({ result: user });
+     res.status(StatusCodes.OK).success(user);
   } catch (error) {
     console.error("회원가입 오류:", error);
     
@@ -21,8 +23,5 @@ export const handleUserSignUp = async (req, res, next) => {
     }
     
     next(error);
-    
   }
-
-  res.status(StatusCodes.OK).success(user);
 };

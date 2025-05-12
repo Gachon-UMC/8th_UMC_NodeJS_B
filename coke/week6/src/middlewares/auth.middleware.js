@@ -1,4 +1,4 @@
-
+// middlewares/auth.middleware.js
 export const authenticateUser = (req, res, next) => {
     // 간단한 더미 인증 미들웨어
     // 실제 구현에서는 JWT 토큰 검증 등을 수행해야 합니다
