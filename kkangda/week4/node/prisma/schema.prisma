@@ -8,18 +8,17 @@ datasource db {
 }
 
 model User {
-  id            Int      @id @default(autoincrement())
-  email         String   @unique(map: "email") @db.VarChar(255)
-  name          String   @db.VarChar(10)
-  gender        Int      @db.TinyInt
-  birth         DateTime @db.Date
-  address       String   @db.VarChar(255)
-  detailAddress String?  @map("detail_address") @db.VarChar(255)
-  phone         String   @map("phone") @db.Char(11)
-
-  foodPreference FoodPreference[]
-  userStoreReviews  UserStoreReview[]
-  userMission UserMission[]
+  id               Int               @id @default(autoincrement())
+  email            String            @unique(map: "email") @db.VarChar(255)
+  name             String            @db.VarChar(10)
+  gender           Int               @db.TinyInt
+  birth            DateTime          @db.Date
+  address          String            @db.VarChar(255)
+  detailAddress    String?           @map("detail_address") @db.VarChar(255)
+  phone            String            @map("phone") @db.Char(11)
+  foodPreference   FoodPreference[]
+  userMission      UserMission[]
+  userStoreReviews UserStoreReview[]
 
   @@map("user")
 }
@@ -44,12 +43,13 @@ model FoodPreference {
   @@map("food_preference")
 }
 
-
 model Store {
   id               Int               @id @default(autoincrement())
   name             String            @db.VarChar(50)
+  
   mission          Mission[]
   userStoreReviews UserStoreReview[]
+  
   @@map("store")
 }
 
@@ -64,7 +64,7 @@ model UserStoreReview {
   
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @default(now()) @map("updated_at")
-
+  
   @@map("user_store_review")
 }
 
@@ -75,19 +75,21 @@ model Mission {
   deadline     DateTime       @db.Date
   reward       Int
   store        Store          @relation(fields: [storeId], references: [id])
-  
-  user_mission user_mission[]
+
+  userMission UserMission[]
 
   @@map("mission")
 }
 
+model UserMission {
+  id         Int     @id @default(autoincrement())
+  userId     Int     @map("user_id")
+  missionId  Int     @map("mission_id")
+  isFinished Int     @map("is_finished")
+  mission    Mission @relation(fields: [missionId], references: [id])
+  user       User    @relation(fields: [userId], references: [id])
+  
+  user_mission user_mission[]
 
-model UserMission{
-	id Int @id @default(autoincrement())
-  user User @relation(fields:[userId],references:[id])
-  userId Int @db.Int @map("user_id")
-	mission Mission @relation(fields:[missionId],references:[id])
-  missionId Int @db.Int @map("mission_id")
-  isFinished Int @db.Int
   @@map("user_mission")
 }
