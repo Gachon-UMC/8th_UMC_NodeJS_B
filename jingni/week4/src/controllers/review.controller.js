@@ -20,7 +20,7 @@ export const handleAddReview = async (req, res, next) => {
         store_id: storeId
     })
 );
-  res.status(StatusCodes.OK).json({result: review});
+  res.status(StatusCodes.OK).success(review)
 
 };
 

@@ -13,7 +13,7 @@ export const handleAddMission = async (req, res, next) => {
         store_id: storeId
         }
     ));
-  res.status(StatusCodes.OK).json({ result: mission });
+  res.status(StatusCodes.OK).success(mission);
 };
 
 export const handleUpdateMission = async (req,res, next) => {
