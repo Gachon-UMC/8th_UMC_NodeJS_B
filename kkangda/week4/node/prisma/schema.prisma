@@ -24,7 +24,8 @@ model User {
   phone         String   @map("phone") @db.Char(11)
 
   foodPreference FoodPreference[]
-  userStoreReviews  UserStoreReview[] 
+  userStoreReviews  UserStoreReview[]
+  userMission UserMission[]
 
   @@map("user")
 }
@@ -54,7 +55,8 @@ model FoodPreference {
 model Store{
   id Int @id @default(autoincrement())
   name String @db.VarChar(50)
-  userStoreReviews  UserStoreReview[] 
+  userStoreReviews  UserStoreReview[]
+  missions Mission[]
   @@map("store")
 }
 
@@ -65,7 +67,31 @@ model UserStoreReview{
   storeId Int @db.Int @map("store_id")
   user User @relation(fields:[userId],references:[id])
   userId Int @db.Int @map("user_id")
-  content String @db.Text 
+  content String @db.Text
+  starRating Int @default(5)
   @@map("user_store_review")
+}
+
+model Mission{
+	id Int @id @default(autoincrement())
+	store Store @relation(fields:[storeId],references:[id])
+  storeId Int @db.Int @map("store_id")
+	content	String @db.VarChar(50)
+	deadline DateTime @db.Date
+	reward Int @db.Int
+
+  userMission UserMission[]
+  
+  @@map("mission")
+}
+
+model UserMission{
+	id Int @id @default(autoincrement())
+  user User @relation(fields:[userId],references:[id])
+  userId Int @db.Int @map("user_id")
+	mission Mission @relation(fields:[missionId],references:[id])
+  missionId Int @db.Int @map("mission_id")
+  isFinished Int @db.Int
+  @@map("user_mission")
 }
 

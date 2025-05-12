@@ -1,14 +1,14 @@
-export const bodyToUserMission = (body) => {
+export const bodyToUserMission = (body, userId) => {
     return {
-        member_id: 1,
-        mission_id: body.mission_id,
-        is_finished: 0, // 도전중
+        userId: userId,
+        missionId: body.missionId,
+        isFinished: 0, // 도전중
     };
 };
 
-export const responseFromUserMission = (body) => {
+export const responseFromUserMission = (result) => {
     return {
-        mission_content: body.content,
+        mission_content: result,
         is_finished: "도전중",
     };
 };
