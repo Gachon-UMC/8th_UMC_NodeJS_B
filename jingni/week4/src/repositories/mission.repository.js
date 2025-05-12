@@ -88,7 +88,7 @@ export const updateMissionToDB = async (data) => {
                 where: {
                     userId: data.user_id,
                     missionId: data.mission_id,
-                    status: 1
+                    status: isDoingStatus
                 }})
 
             if(challenging){
@@ -112,7 +112,7 @@ export const updateMissionToDB = async (data) => {
             where: {
                 userId: data.userId,
                 missionId: data.mission,
-                status: 1
+                status: isDoingStatus
             }
         })
 
@@ -126,7 +126,8 @@ export const updateMissionToDB = async (data) => {
                 missionId: data.mission_id
             },
             data: {
-                status: data.status
+                status: isCompletedStatus,
+                //completed_at: new Date()
             }
         });
 
