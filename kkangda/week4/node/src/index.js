@@ -24,11 +24,11 @@ app.get("/", (req, res) => {
 
 app.post("/api/v1/users/signup", handleUserSignUp);
 
-app.post("/users/1/missions", handleUserMission);
+app.post("/users/:userId/missions", handleUserMission);
 
-app.post("/stores/1/reviews", handleStoreReview);
+app.post("/stores/:storeId/reviews", handleStoreReview);
 
-app.post("/stores/1/missions", handleStoreMission);
+app.post("/stores/:storeId/missions", handleStoreMission);
 
 app.get("/api/v1/stores/:storeId/reviews", handleListStoreReviews);
 
