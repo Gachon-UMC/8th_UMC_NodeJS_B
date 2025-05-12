@@ -1,5 +1,5 @@
 import { prisma } from "../db.config.js";
-import { IsChallenging } from "../errors.js";
+import { IsChallenging, NotExistStoreId } from "../errors.js";
 
 export const addMissionToDB = async (data) => {
 
@@ -37,6 +37,12 @@ export const getMissionFromDB = async (missionId) => {
 
 export const getStoreMissionFromDB = async (storeId, cursor) => {
 
+    const store = await prisma.store.findFirst({where: {id: storeId}})
+
+    if(!store){
+       throw new NotExistStoreId("존재하지 않는 가게 ID 입니다. ", {storeId})
+    }
+
     const missions = await prisma.mission.findMany({
         select:{
             id: true,
@@ -57,6 +63,10 @@ export const getStoreMissionFromDB = async (storeId, cursor) => {
         orderBy: { id: "asc" },
         take: 5,
     });
+
+    if(missions.length ==0){
+        return null;
+    }
     return missions;
   }
 

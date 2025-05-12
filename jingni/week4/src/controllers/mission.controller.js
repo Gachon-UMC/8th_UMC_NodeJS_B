@@ -46,5 +46,5 @@ export const handleStoreMissions = async(req,res,next) =>{
   
   const missions = await showStoreMissions(storeId, cursor);
 
-  res.status(StatusCodes.OK).json(missions);
+  res.status(StatusCodes.OK).success(missions)
 }
