@@ -6,6 +6,7 @@ import { handleUserMission } from "./controllers/user.mission.controller.js";
 import { handleStoreReview } from "./controllers/store.review.controller.js";
 import { handleStoreMission } from "./controllers/store.mission.controller.js";
 import { handleListStoreReviews } from "./controllers/store.controller.js";
+import { handleListStoreMission } from "./controllers/get.store.mission.controller.js";
 import { handleListUserReviews } from "./controllers/user.review.controller.js";
 
 dotenv.config();
@@ -32,7 +33,10 @@ app.post("/stores/:storeId/missions", handleStoreMission);
 
 app.get("/api/v1/stores/:storeId/reviews", handleListStoreReviews);
 
+app.get("/stores/:storeId/missions", handleListStoreMission);
+
 app.get("/users/:userId/reviews", handleListUserReviews);
+
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

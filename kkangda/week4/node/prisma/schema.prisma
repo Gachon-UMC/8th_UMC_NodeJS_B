@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -30,33 +24,32 @@ model User {
   @@map("user")
 }
 
-
 model FoodCategory {
-  id   Int    @id @default(autoincrement())
-  category String @db.VarChar(10)
-
+  id             Int              @id @default(autoincrement())
+  category       String           @db.VarChar(10)
   foodPreference FoodPreference[]
 
   @@map("food_category")
 }
 
 model FoodPreference {
-  id           Int        @id @default(autoincrement())
-  user           User         @relation(fields: [userId], references: [id])
+  id             Int          @id @default(autoincrement())
   userId         Int          @map("member_id")
-  foodCategory   FoodCategory @relation(fields: [foodCategoryId], references: [id])
   foodCategoryId Int          @map("food_category_id")
+  foodCategory   FoodCategory @relation(fields: [foodCategoryId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
 
   @@index([foodCategoryId], map: "f_category_id")
   @@index([userId], map: "user_id")
   @@map("food_preference")
 }
 
-model Store{
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(50)
-  userStoreReviews  UserStoreReview[]
-  missions Mission[]
+
+model Store {
+  id               Int               @id @default(autoincrement())
+  name             String            @db.VarChar(50)
+  mission          Mission[]
+  userStoreReviews UserStoreReview[]
   @@map("store")
 }
 
@@ -75,18 +68,19 @@ model UserStoreReview {
   @@map("user_store_review")
 }
 
-model Mission{
-	id Int @id @default(autoincrement())
-	store Store @relation(fields:[storeId],references:[id])
-  storeId Int @db.Int @map("store_id")
-	content	String @db.VarChar(50)
-	deadline DateTime @db.Date
-	reward Int @db.Int
-
-  userMission UserMission[]
+model Mission {
+  id           Int            @id @default(autoincrement())
+  storeId      Int            @map("store_id")
+  content      String         @db.VarChar(50)
+  deadline     DateTime       @db.Date
+  reward       Int
+  store        Store          @relation(fields: [storeId], references: [id])
   
+  user_mission user_mission[]
+
   @@map("mission")
 }
+
 
 model UserMission{
 	id Int @id @default(autoincrement())
