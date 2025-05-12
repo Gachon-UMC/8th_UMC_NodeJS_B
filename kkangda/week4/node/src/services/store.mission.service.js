@@ -3,7 +3,7 @@ import { addMission, getMission } from "../repositories/store.mission.repository
 
 export const storeMission = async (data) => {
     const missionId = await addMission({
-        store_id: data.store_id,
+        storeId: data.storeId,
         content: data.content,
         deadline: data.deadline,
         reward: data.reward,
@@ -14,6 +14,6 @@ export const storeMission = async (data) => {
     }
 
     const mission = await getMission(missionId);
-
+    console.log(mission);
     return responseFromMission(mission);
 };
