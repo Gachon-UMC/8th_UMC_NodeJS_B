@@ -38,10 +38,10 @@ export const handleShowReviews = async (req, res, next) => {
 
 export const handleMyReviews = async (req, res, next)=>{
 
-  const userId = req.user?.id || 1;
+  const userId = req.user?.id || 2;
   const cursor = typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0;
 
   const reviews = await showMyReviews(userId, cursor);
 
-  res.status(StatusCodes.OK).json(reviews);
+  res.status(StatusCodes.OK).success(reviews)
 }

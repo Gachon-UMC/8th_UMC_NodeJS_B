@@ -85,5 +85,9 @@ export const getReviewToDB = async (reviewId) => {
       take: 5,
     });
 
+    if(reviews.length==0){
+      return null;
+    }
+
     return reviews;
   }

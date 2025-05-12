@@ -37,3 +37,13 @@ export class IsChallenging extends Error {
     this.data = data;
   }
 }
+
+export class NoReviews extends Error{
+  errorCode = "R002";
+
+  constructor(reason, data){
+    super(reason);
+    this.reason = reason;
+    this.data = data;
+  }
+}
