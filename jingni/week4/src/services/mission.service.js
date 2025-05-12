@@ -1,4 +1,5 @@
 import { responseFromMission, responseFromMissionList } from "../dtos/mission.dto.js";
+import { NotExistStoreId } from "../errors.js";
 
 import {
     addMissionToDB,
@@ -20,7 +21,7 @@ export const addMission = async (data) =>{
     });
 
     if(newMissionId == null){
-        throw new Error("존재하지 않는 가게 ID 입니다.");
+        throw new NotExistStoreId("존재하지 않는 가게 ID 입니다.", data)
     }
 
     const mission = await getMissionFromDB(newMissionId);

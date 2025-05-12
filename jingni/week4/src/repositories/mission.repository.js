@@ -2,7 +2,7 @@ import { prisma } from "../db.config.js";
 
 export const addMissionToDB = async (data) => {
 
-    const store = prisma.store.findFirst({where: {id: data.store_id}})
+    const store = await prisma.store.findFirst({where: {id: data.store_id}})
 
     if(!store){
         return null;

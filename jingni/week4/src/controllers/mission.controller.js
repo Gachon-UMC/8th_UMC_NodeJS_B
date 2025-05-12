@@ -4,11 +4,13 @@ import { addMission, modifyMission, showStoreMissions } from "../services/missio
 
 export const handleAddMission = async (req, res, next) => {
   console.log("미션 추가를 요청했습니다!");
+
+  const storeId = Number(req.params.storeId)
   
   const mission = await addMission(
     bodyToMission(
         {...req.body,
-        store_id: parseInt(req.params.storeId)
+        store_id: storeId
         }
     ));
   res.status(StatusCodes.OK).json({ result: mission });
