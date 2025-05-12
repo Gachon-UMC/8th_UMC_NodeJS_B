@@ -28,7 +28,7 @@ app.get("/", (req, res) => {
 });
 
 // 개별 라우트 대신 라우터 모듈 사용
-app.use("/api/v1/users", userRouter); 
+app.use("/api/users", userRouter); 
 app.use('/api/places', reviewRouter);
 app.use('/api/stores', storeRouter);
 app.use('/api/missions', missionRouter);

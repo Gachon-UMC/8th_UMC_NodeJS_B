@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { addReview } from "../services/review.service.js";
+import { getUserReviews } from "../repositories/review.repository.js";
 
 export const handleAddReview = async (req, res, next) => {
   try {
@@ -26,6 +27,19 @@ export const handleAddReview = async (req, res, next) => {
     res.status(StatusCodes.CREATED).json({ result: review });
   } catch (error) {
     console.error("리뷰 추가 오류:", error);
+    next(error);
+  }
+};
+// 새로운 함수 - 사용자 리뷰 목록 조회
+export const handleGetUserReviews = async (req, res, next) => {
+  try {
+    // 인증된 사용자 ID 사용 (또는 테스트용 ID)
+    const userId = req.user?.id || 1;
+    
+    const reviews = await getUserReviews(userId);
+    res.status(StatusCodes.OK).json({ result: reviews });
+  } catch (error) {
+    console.error("리뷰 목록 조회 오류:", error);
     next(error);
   }
 };
