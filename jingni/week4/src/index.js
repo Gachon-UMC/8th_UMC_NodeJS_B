@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import express from "express";         // -> ES Module
 
 import { handleUserSignUp } from "./controllers/user.controller.js";
-import { handleAddMission, handleChallengeMission, handleStoreMissions } from "./controllers/mission.controller.js";
+import { handleAddMission, handleChallengeMission, handleStoreMissions, handleCompleteMission } from "./controllers/mission.controller.js";
 import { handleAddReview, handleShowReviews, handleMyReviews } from "./controllers/review.controller.js";
 
 dotenv.config();
@@ -47,6 +47,7 @@ app.post("/api/v1/users/signup", handleUserSignUp); //POST 요청을 보내면 h
 app.post("/api/v1/users/missions/:missionId", handleChallengeMission);
 app.post("/api/v1/:storeId/missions/users", handleAddMission);
 app.post("/api/v1/:storeId/reviews/users",handleAddReview);
+app.patch("/api/v1/users/missions/:missionId",handleCompleteMission);
 app.get("/api/v1/stores/:storeId/reviews", handleShowReviews);
 app.get("/api/v1/users/reviews", handleMyReviews);
 app.get("/api/v1/:storeId/missions",handleStoreMissions);

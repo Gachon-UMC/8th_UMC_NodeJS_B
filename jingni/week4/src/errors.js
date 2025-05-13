@@ -28,7 +28,7 @@ export class NotExistMissionId extends Error {
   }
 }
 
-export class IsAlreadyInStatus extends Error {
+export class StatusError extends Error {
   errorCode = "M002"
 
   constructor (reason, data){

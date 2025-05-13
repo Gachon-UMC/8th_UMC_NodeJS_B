@@ -1,13 +1,7 @@
 import { prisma } from "../db.config.js";
 
+
 export const addReviewToDB = async (data) => {
-
-    console.log("data.store_id",data.store_id)
-    const store = await prisma.store.findFirst({where: {id:data.store_id} })
-
-    if(!store){
-      return null;
-    }
 
     const created = await prisma.review.create({
       data: {
@@ -23,10 +17,9 @@ export const addReviewToDB = async (data) => {
       }
     });
     return created.id;
-
   }
 
-export const getReviewToDB = async (reviewId) => {
+export const getReviewFromDB = async (reviewId) => {
     
   const review = await prisma.review.findFirst({where: {id: reviewId}})
   if(!review){
@@ -34,9 +27,9 @@ export const getReviewToDB = async (reviewId) => {
   }
 
   return review;
-  }
+}
 
-  export const getAllReviewsFromDB = async (storeId, cursor) => {
+export const getAllReviewsFromDB = async (storeId, cursor) => {
     
     const reviews = await prisma.review.findMany({
       select: {
@@ -60,34 +53,34 @@ export const getReviewToDB = async (reviewId) => {
     });
   
     return reviews;
-  };
+};
 
-  export const getAllMyReviewsFromDB = async (userId, cursor) => {
+export const getAllMyReviewsFromDB = async (userId, cursor) => {
 
-    const reviews = await prisma.review.findMany({
-      select: {
-        id: true,
-        content: true,
-        rating: true,
-        title: true,
-        storeId: true,
-        userId: true,
-        store: true,
-        user: true,
-      },
-      where: { 
-        userId: userId, 
-        id: { 
-          gt: cursor 
-        }
-      },
-      orderBy: { id: "asc" },
-      take: 5,
-    });
+  const reviews = await prisma.review.findMany({
+    select: {
+      id: true,
+      content: true,
+      rating: true,
+      title: true,
+      storeId: true,
+      userId: true,
+      store: true,
+      user: true,
+    },
+    where: { 
+      userId: userId, 
+      id: { 
+        gt: cursor 
+      }
+    },
+    orderBy: { id: "asc" },
+    take: 5,
+  });
 
-    if(reviews.length==0){
-      return null;
-    }
-
-    return reviews;
+  if(reviews.length==0){
+    return null;
   }
+
+  return reviews;
+}

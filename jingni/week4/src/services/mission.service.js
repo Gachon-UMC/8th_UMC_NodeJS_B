@@ -1,5 +1,5 @@
 import { responseFromMission, responseFromMissionList } from "../dtos/mission.dto.js";
-import { IsAlreadyInStatus, NoMissions, NotExistMissionId, NotExistStoreId } from "../errors.js";
+import { StatusError, NoMissions, NotExistMissionId, NotExistStoreId } from "../errors.js";
 
 import {
     addMissionToDB,
@@ -36,18 +36,18 @@ export const challengeMission = async (data) => {
     const updatedStatus = data.status;
 
     // 미션이 존재하는지 확인
-    const mission = await getMissionFromDB(data.mission_id);
+    let mission = await getMissionFromDB(data.mission_id);
 
     if (!mission) {
         throw new NotExistMissionId("존재하지 않는 미션 ID입니다.", data);
     }
 
     // doMission에 존재 하는지 확인
-    const doMission = await getDoMissionFromDB(data.mission_id);
+    mission = await getDoMissionFromDB(data.mission_id);
     
-    if (doMission) {
+    if (mission) {
         if (await checkStatusFromDB(data, updatedStatus)) {
-            throw new IsAlreadyInStatus("이미 도전중인 미션입니다.", data);
+            throw new StatusError("이미 도전중인 미션입니다.", data);
         }
         const updatedMissionId = await updateMissionToDB(data, updatedStatus);
         const updatedMission = await getMissionFromDB(updatedMissionId);
@@ -68,4 +68,27 @@ export const showStoreMissions = async (storeId, cursor) => {
         throw new NoMissions("해당 가게에 미션이 없습니다.", {storeId})
     }
     return responseFromMissionList(missions);
+}
+
+export const completeMission = async (data) => {
+    const updatedStatus = data.status;
+
+    let mission = await getMissionFromDB(data.mission_id);
+    if(!mission){
+        throw new NotExistMissionId("존재하지 않는 미션 ID입니다. ", data);
+    }
+
+    mission = await getDoMissionFromDB(data.mission_id);
+    if(!mission){
+        throw new StatusError("도전중인 미션이 아닙니다.", data);
+    }
+
+    if(!await checkStatusFromDB(data, 1)){
+        throw new StatusError("도전중인 미션이 아닙니다.", data);
+    }
+
+    const completedMissionId = await updateMissionToDB (data, updatedStatus);
+    const completedMission = await getMissionFromDB(completedMissionId);
+
+    return responseFromMission(completedMission);
 }
