@@ -28,7 +28,7 @@ export class NotExistMissionId extends Error {
   }
 }
 
-export class IsChallenging extends Error {
+export class IsAlreadyInStatus extends Error {
   errorCode = "M002"
 
   constructor (reason, data){
@@ -42,16 +42,6 @@ export class NoMissions extends Error{
   errorCode = "M003";
 
   constructor(reason, data){
-    super(reason);
-    this.reason = reason;
-    this.data = data;
-  }
-}
-
-export class NotChallenging extends Error {
-  errorCode = "M004"
-
-  constructor (reason, data){
     super(reason);
     this.reason = reason;
     this.data = data;

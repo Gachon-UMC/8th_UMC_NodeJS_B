@@ -1,16 +1,23 @@
 import { responseFromMission, responseFromMissionList } from "../dtos/mission.dto.js";
-import { NoMissions, NotExistMissionId, NotExistStoreId } from "../errors.js";
+import { IsAlreadyInStatus, NoMissions, NotExistMissionId, NotExistStoreId } from "../errors.js";
 
 import {
     addMissionToDB,
     getMissionFromDB,
     updateMissionToDB,
-    getStoreMissionFromDB
+    getStoreMissionsFromDB,
+    getStoreFromDB,
+    getDoMissionFromDB,
+    addDoMissionToDB,
+    checkStatusFromDB
 } from "../repositories/mission.repository.js";
 
 
 export const addMission = async (data) =>{
-    console.log(data);
+    const store = await getStoreFromDB(data.store_id);
+    if(!store){
+        throw new NotExistStoreId("존재하지 않는 가게 ID 입니다.", data);
+    }
     
     const newMissionId = await addMissionToDB ({
         title: data.title,
@@ -20,31 +27,44 @@ export const addMission = async (data) =>{
         store_id: data.store_id
     });
 
-    if(newMissionId == null){
-        throw new NotExistStoreId("존재하지 않는 가게 ID 입니다.", data)
-    }
-
     const mission = await getMissionFromDB(newMissionId);
 
     return responseFromMission(mission);
 }
 
+export const challengeMission = async (data) => {
+    const updatedStatus = data.status;
 
-export const modifyMission = async (data) => {
-    
-    const updatedMissionId = await updateMissionToDB(data);
-    if(updatedMissionId == null){
-        throw new NotExistMissionId("존재하지 않는 미션 ID 입니다.", data)
+    // 미션이 존재하는지 확인
+    const mission = await getMissionFromDB(data.mission_id);
+
+    if (!mission) {
+        throw new NotExistMissionId("존재하지 않는 미션 ID입니다.", data);
     }
 
-    const mission = getMissionFromDB(updatedMissionId)
-    return responseFromMission(mission);
+    // doMission에 존재 하는지 확인
+    const doMission = await getDoMissionFromDB(data.mission_id);
+    
+    if (doMission) {
+        if (await checkStatusFromDB(data, updatedStatus)) {
+            throw new IsAlreadyInStatus("이미 도전중인 미션입니다.", data);
+        }
+        const updatedMissionId = await updateMissionToDB(data, updatedStatus);
+        const updatedMission = await getMissionFromDB(updatedMissionId);
+        return responseFromMission(updatedMission);
+    }
+
+    // doMission에 존재하지 않으면 삽입
+    const newDoMissionId = await addDoMissionToDB(data);
+    const newDoMission = await getDoMissionFromDB(newDoMissionId);
+
+    return responseFromMission(newDoMission);
 }
 
 export const showStoreMissions = async (storeId, cursor) => {
-    const missions = await getStoreMissionFromDB(storeId, cursor);
+    const missions = await getStoreMissionsFromDB(storeId, cursor);
 
-    if(missions ===null){
+    if(!missions){
         throw new NoMissions("해당 가게에 미션이 없습니다.", {storeId})
     }
     return responseFromMissionList(missions);

@@ -1,12 +1,11 @@
 import { StatusCodes } from "http-status-codes";
 import { bodyToMission, bodyToDoMission } from "../dtos/mission.dto.js";
-import { addMission, modifyMission, showStoreMissions } from "../services/mission.service.js";
+import { addMission, challengeMission, showStoreMissions } from "../services/mission.service.js";
 
 export const handleAddMission = async (req, res, next) => {
   console.log("미션 추가를 요청했습니다!");
 
   const storeId = Number(req.params.storeId)
-  
   const mission = await addMission(
     bodyToMission(
         {...req.body,
@@ -16,8 +15,8 @@ export const handleAddMission = async (req, res, next) => {
   res.status(StatusCodes.OK).success(mission);
 };
 
-export const handleUpdateMission = async (req,res, next) => {
-  console.log("미션 업데이트를 요청했습니다 !");
+export const handleChallengeMission = async (req,res, next) => {
+  console.log("미션 도전하기를 요청했습니다 !");
   console.log("body: ",req.body);
 
   const missionId = req.params.missionId;
@@ -27,7 +26,7 @@ export const handleUpdateMission = async (req,res, next) => {
       return res.status(StatusCodes.UNAUTHORIZED).json({ message: "로그인이 필요합니다." });
   }
 
-  const updatedMission = await modifyMission(
+  const updatedMission = await challengeMission(
       bodyToDoMission(
           {...req.body,
           mission_id: missionId,
