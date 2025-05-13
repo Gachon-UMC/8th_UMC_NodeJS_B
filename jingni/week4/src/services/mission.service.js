@@ -1,4 +1,5 @@
 import { responseFromMission, responseFromMissionList } from "../dtos/mission.dto.js";
+import { NoMissions, NotExistMissionId, NotExistStoreId } from "../errors.js";
 
 import {
     addMissionToDB,
@@ -20,7 +21,7 @@ export const addMission = async (data) =>{
     });
 
     if(newMissionId == null){
-        throw new Error("존재하지 않는 가게 ID 입니다.");
+        throw new NotExistStoreId("존재하지 않는 가게 ID 입니다.", data)
     }
 
     const mission = await getMissionFromDB(newMissionId);
@@ -33,13 +34,18 @@ export const modifyMission = async (data) => {
     
     const updatedMissionId = await updateMissionToDB(data);
     if(updatedMissionId == null){
-        throw new Error("해당 미션을 찾을 수 없습니다.");
+        throw new NotExistMissionId("존재하지 않는 미션 ID 입니다.", data)
     }
 
-    return responseFromMission({mission_id : updatedMissionId});
+    const mission = getMissionFromDB(updatedMissionId)
+    return responseFromMission(mission);
 }
 
 export const showStoreMissions = async (storeId, cursor) => {
     const missions = await getStoreMissionFromDB(storeId, cursor);
+
+    if(missions ===null){
+        throw new NoMissions("해당 가게에 미션이 없습니다.", {storeId})
+    }
     return responseFromMissionList(missions);
 }

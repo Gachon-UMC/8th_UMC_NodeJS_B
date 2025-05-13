@@ -1,4 +1,5 @@
 import { responseFromReview, responseFromReviewList } from "../dtos/review.dto.js"
+import { NoReviews, NotExistStoreId } from "../errors.js";
 
 import{
     addReviewToDB,
@@ -17,7 +18,7 @@ export const addReview = async (data) =>{
     })
 
     if(newReviewId === null){
-        throw new Error ("존재하지 않은 가게 ID 입니다. ");
+        throw new NotExistStoreId("존재하지 않는 가게 ID 입니다.", data)
     }
 
     const review = await getReviewToDB(newReviewId);
@@ -32,5 +33,9 @@ export const showReviews = async (storeId, cursor) => {
 
 export const showMyReviews = async (userId, cursor) => {
     const reviews = await getAllMyReviewsFromDB(userId, cursor);
+
+    if(reviews === null){
+        throw new NoReviews("조회 가능한 리뷰가 없습니다.", {userId});
+    }
     return responseFromReviewList(reviews)
 }

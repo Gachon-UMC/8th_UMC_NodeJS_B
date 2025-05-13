@@ -1,8 +1,9 @@
 import { prisma } from "../db.config.js";
+import { IsChallenging, NotChallenging, NotExistStoreId } from "../errors.js";
 
 export const addMissionToDB = async (data) => {
 
-    const store = prisma.store.findFirst({where: {id: data.store_id}})
+    const store = await prisma.store.findFirst({where: {id: data.store_id}})
 
     if(!store){
         return null;
@@ -36,6 +37,12 @@ export const getMissionFromDB = async (missionId) => {
 
 export const getStoreMissionFromDB = async (storeId, cursor) => {
 
+    const store = await prisma.store.findFirst({where: {id: storeId}})
+
+    if(!store){
+       throw new NotExistStoreId("존재하지 않는 가게 ID 입니다. ", {storeId})
+    }
+
     const missions = await prisma.mission.findMany({
         select:{
             id: true,
@@ -56,6 +63,10 @@ export const getStoreMissionFromDB = async (storeId, cursor) => {
         orderBy: { id: "asc" },
         take: 5,
     });
+
+    if(missions.length ==0){
+        return null;
+    }
     return missions;
   }
 
@@ -67,6 +78,10 @@ export const updateMissionToDB = async (data) => {
     if(data.status ==1){
         const doMission = await prisma.doMission.findFirst({where: {missionId: data.mission_id}})
         if(!doMission){
+            const mission = await getMissionFromDB(data.mission_id);
+            if (!mission) {
+                return null; 
+            }
             //INSERT do_mission
             const createdDoMission = await prisma.doMission.create({
                 data:{
@@ -88,11 +103,11 @@ export const updateMissionToDB = async (data) => {
                 where: {
                     userId: data.user_id,
                     missionId: data.mission_id,
-                    status: 1
+                    status: isDoingStatus
                 }})
 
             if(challenging){
-                throw new Error('이미 도전중인 미션입니다.');
+                throw new IsChallenging("이미 도전중인 미션입니다.", data);
             }
             
             await prisma.doMission.updateMany({
@@ -112,12 +127,12 @@ export const updateMissionToDB = async (data) => {
             where: {
                 userId: data.userId,
                 missionId: data.mission,
-                status: 1
+                status: isDoingStatus
             }
         })
 
         if(!myDoingMission){
-            throw new Error("도전중인 미션이 아닙니다.");
+            throw new NotChallenging("도전중인 미션이 아닙니다.", data);
         }
 
         await prisma.doMission.updateMany({
@@ -126,7 +141,8 @@ export const updateMissionToDB = async (data) => {
                 missionId: data.mission_id
             },
             data: {
-                status: data.status
+                status: isCompletedStatus,
+                //completed_at: new Date()
             }
         });
 

@@ -13,6 +13,27 @@ const app = express()
 // const port = 3000
 const port = process.env.PORT;
 
+// 미들웨어 등록
+app.use((req, res, next) => {
+  res.success = (success) => {
+    return res.json({ 
+      resultType: "SUCCESS", 
+      error: null, 
+      success 
+    });
+  };
+
+  res.error = ({ errorCode = "unknown", reason = null, data = null }) => {
+    return res.json({
+      resultType: "FAIL",
+      error: { errorCode, reason, data },
+      success: null,
+    });
+  };
+
+  next();
+});
+
 // cors 방식 허용
 app.use(cors());
  // 정적 파일 접근                            
@@ -33,6 +54,19 @@ app.post("/api/v1/:storeId/reviews/users",handleAddReview);
 app.get("/api/v1/stores/:storeId/reviews", handleShowReviews);
 app.get("/api/v1/users/reviews", handleMyReviews);
 app.get("/api/v1/:storeId/missions",handleStoreMissions);
+
+//전역 오류 처리하기 위한 미들웨어
+app.use((err, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  res.status(err.statusCode || 500).error({
+    errorCode: err.errorCode || "unknown",
+    reason: err.reason || err.message || null,
+    data: err.data || null,
+  });
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

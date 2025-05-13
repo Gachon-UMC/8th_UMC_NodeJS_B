@@ -2,7 +2,7 @@ import { prisma } from "../db.config.js";
 
 export const addReviewToDB = async (data) => {
 
-    console.log(data.store_id)
+    console.log("data.store_id",data.store_id)
     const store = await prisma.store.findFirst({where: {id:data.store_id} })
 
     if(!store){
@@ -85,31 +85,9 @@ export const getReviewToDB = async (reviewId) => {
       take: 5,
     });
 
+    if(reviews.length==0){
+      return null;
+    }
+
     return reviews;
   }
-
-
-export const getStoreReviewsFromDB = async (storeId, cursor) => {
-
-  const missions = await prisma.mission.findMany({
-      select:{
-          id: true,
-          title: true,
-          content: true,
-          point: true,
-          deadline: true,
-          storeId: true,
-          store: true,
-          doMission: true
-      },
-      where:{
-          storeId: storeId,
-          id: {
-              gt: cursor
-          }
-      },
-      orderBy: { id: "asc" },
-      take: 5,
-  });
-  return missions;
-}
