@@ -10,6 +10,5 @@ export const responseFromAddChallenge = (res) => {
         id: res.id,
         missionId: res.missionId,
         userId: res.userId,
-        createdAt: res.createdAt,
     };
 };

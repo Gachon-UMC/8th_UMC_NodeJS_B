@@ -1,8 +1,13 @@
 import { responseFromStoreReviewList } from "../dtos/storeReviewList.dto.js";
 import { getReviewList } from "./repositories/storeReviewList.repository.js";
+import { NotFoundStoreReviewListError } from "../error.js";
 export const getStoreReviewList = async (storeId, cursor) => {
-    // console.log("data1", storeId);
     const getData = await getReviewList(storeId, cursor);
-    console.log("getData", getData);
+    if (getData.length === 0) {
+        throw new NotFoundStoreReviewListError(
+            "해당 가게의 리뷰가 없습니다.",
+            getData
+        );
+    }
     return responseFromStoreReviewList(getData);
 };

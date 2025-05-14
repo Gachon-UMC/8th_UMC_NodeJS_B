@@ -22,10 +22,15 @@ app.use((req, res, next) => {
         return res.json({ resultType: "SUCCESS", error: null, success });
     };
 
-    res.error = ({ errorCode = "unknown", reason = null, data = null }) => {
+    res.error = ({
+        errorCode = "unknown",
+        statusCode,
+        reason = null,
+        data = null,
+    }) => {
         return res.json({
             resultType: "FAIL",
-            error: { errorCode, reason, data },
+            error: { statusCode, errorCode, reason, data },
             success: null,
         });
     };
@@ -48,15 +53,14 @@ app.post("/api/v1/mission/:storeid", handleAddMission);
 // 리뷰 추가
 app.post("/api/v1/store/:storeid/reviews", handleAddReview);
 // 도전중인 미션에 추가
-app.post("/api/v1/missions/:missionId", handleAddChallenge);
-
-// 미션 목록 조회
+app.post("/api/v1/:userId/missions/:missionId", handleAddChallenge);
+// 특정 가게 리뷰 목록 조회
 app.get("/api/v1/stores/:storeid/reviews", handleStoreReviewList);
 // 나의 리뷰 목록 조회
-app.get("/api/v1/stores/:userId/reviews", handleMyReviewList);
+app.get("/api/v1/reviews/:userId", handleMyReviewList);
 // 가게별 리뷰 목록 조회
 app.get("/api/v1/store/:storeId/missions", handleGetStoreMission);
-// 나의 진행중인 리뷰 조회
+// 나의 진행중인 미션 조회
 app.get("/api/v1/missions/:userId", handleGetMyOngoingMission);
 // 진행중인 리뷰 완료로 바꾸기
 app.patch("/api/v1/mission/:userId/:missionId", handleUpdateMission);
@@ -68,6 +72,7 @@ app.use((err, req, res, next) => {
 
     res.status(err.statusCode || 500).error({
         errorCode: err.errorCode || "unknown",
+        statusCode: err.statusCode || 500,
         reason: err.reason || err.message || null,
         data: err.data || null,
     });

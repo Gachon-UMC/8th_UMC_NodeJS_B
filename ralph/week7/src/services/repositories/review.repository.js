@@ -1,5 +1,5 @@
-import { pool } from "../../db.config.js";
 import { prisma } from "../../db.config.js";
+import { findStore } from "./addMission.repository.js";
 function convertBigIntToString(obj) {
     return JSON.parse(
         JSON.stringify(obj, (key, value) =>
@@ -7,8 +7,13 @@ function convertBigIntToString(obj) {
         )
     );
 }
+
 export const addReview = async (data) => {
-    console.log("addReview", data);
+    const store = await findStore(data.store_id);
+    if (store === null) {
+        return null;
+    }
+
     const created = await prisma.review.create({
         data: {
             user_id: data.user_id,

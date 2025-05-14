@@ -1,9 +1,8 @@
 import { responseFromReview } from "../dtos/review.dto.js";
 import { addReview, getFirstReview } from "./repositories/review.repository.js";
-import { pool } from "../db.config.js";
+import { NotFoundStoreIdError } from "../error.js";
 
 export const addReviewStore = async (data) => {
-    console.log("data", data);
     const addReviewId = await addReview({
         user_id: data.user_id,
         store_id: data.store_id,
@@ -11,8 +10,9 @@ export const addReviewStore = async (data) => {
         content: data.content,
         name: data.name,
     });
-    console.log("addReviewId", addReviewId);
+    if (addReviewId === null) {
+        throw new NotFoundStoreIdError("가게가 존재하지 않습니다.", data);
+    }
     const firstReview = await getFirstReview(addReviewId);
-    console.log("firstReview", firstReview);
     return responseFromReview(firstReview);
 };
