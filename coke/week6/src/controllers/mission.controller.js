@@ -2,6 +2,8 @@ import { StatusCodes } from "http-status-codes";
 import { addMission, participateMission } from "../services/mission.service.js";
 import { getUserOngoingMissions, completeMission, toggleMissionStatus } from "../repositories/userMission.repository.js";
 import { getUserMissionByUserAndMission } from "../repositories/userMission.repository.js";
+import { getStoreMissions } from "../repositories/mission.repository.js";
+
 
 // 가게에 미션 추가 기능
 export const handleAddMission = async (req, res, next) => {
@@ -47,10 +49,15 @@ export const handleParticipateMission = async (req, res, next) => {
     };
     
     const userMission = await participateMission(participationData);
+
+
+    /* 기존 코드
     res.status(StatusCodes.CREATED).json({ 
       message: "미션 도전이 성공적으로 등록되었습니다.",
       result: userMission 
     });
+    
+   
   } catch (error) {
     console.error("미션 참여 오류:", error);
     
@@ -60,10 +67,21 @@ export const handleParticipateMission = async (req, res, next) => {
     } else if (error.message === "이미 도전 중인 미션입니다.") {
       return res.status(StatusCodes.CONFLICT).json({ message: error.message });
     }
+    */
+
+
+    return res.status(StatusCodes.CREATED).success({
+      message: "미션 도전이 성공적으로 등록되었습니다.",
+      userMission
+    });
+  } catch (error) {
+    console.error("미션 참여 오류:", error);
+
     
     next(error);
   }
 };
+
 
 export const handleGetUserOngoingMissions = async (req, res, next) => {
   try {
@@ -110,6 +128,15 @@ export const handleUpdateMissionStatus = async (req, res, next) => {
     });
   } catch (error) {
     console.error("미션 상태 변경 오류:", error);
+
+export const handleGetStoreMissions = async (req, res, next) => {
+  try {
+    const { storeId } = req.params;
+    
+    const missions = await getStoreMissions(storeId);
+    res.status(StatusCodes.OK).json({ result: missions });
+  } catch (error) {
+    console.error("가게 미션 목록 조회 오류:", error);
     next(error);
   }
 };
