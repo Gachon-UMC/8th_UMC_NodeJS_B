@@ -1,4 +1,10 @@
 import { prisma } from "../db.config.js";
+export const MISSION_STATUS = {
+  NOT_STARTED: 0,
+  CHALLENGING: 1,
+  COMPLETED: 2,
+  FAILED: 3
+};
 
 export const getMissionFromDB = async (missionId) => {
 
@@ -100,7 +106,7 @@ export const addMissionToDB = async (data) => {
 export const addDoMissionToDB = async (data) => {
     const newDoMission = await prisma.doMission.create({
         data:{
-            status: 1,
+            status: CHALLENGING,
             user: {
                 connect: {id : data.user_id}
             },
