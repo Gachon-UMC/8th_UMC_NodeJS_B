@@ -1,4 +1,5 @@
 import { responseFromMission } from "../dtos/store.mission.dto.js";
+import { DuplicateUserEmailError } from "../errors.js";
 import { addMission, getMission } from "../repositories/store.mission.repository.js";
 
 export const storeMission = async (data) => {
@@ -10,7 +11,7 @@ export const storeMission = async (data) => {
     });
 
     if (missionId === null) {
-        throw new Error("가게가 존재하지 않습니다.");
+        throw new DuplicateUserEmailError("가게가 존재하지 않습니다.", data);
     }
 
     const mission = await getMission(missionId);

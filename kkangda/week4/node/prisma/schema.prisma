@@ -60,10 +60,10 @@ model UserStoreReview {
   user       User     @relation(fields: [userId], references: [id])
   userId     Int      @db.Int @map("user_id")
   content    String   @db.Text
-  starRating Int      @map("star_rating") @default(5)
+  starRating Int      @map("starRating") @default(5)
   
   createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @default(now()) @map("updated_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
   
   @@map("user_store_review")
 }
