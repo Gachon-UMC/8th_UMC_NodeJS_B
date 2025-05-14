@@ -1,6 +1,9 @@
 import { StatusCodes } from "http-status-codes";
 import { addMission, participateMission } from "../services/mission.service.js";
+import { getUserOngoingMissions, completeMission, toggleMissionStatus } from "../repositories/userMission.repository.js";
+import { getUserMissionByUserAndMission } from "../repositories/userMission.repository.js";
 import { getStoreMissions } from "../repositories/mission.repository.js";
+
 
 // 가게에 미션 추가 기능
 export const handleAddMission = async (req, res, next) => {
@@ -78,6 +81,53 @@ export const handleParticipateMission = async (req, res, next) => {
     next(error);
   }
 };
+
+
+export const handleGetUserOngoingMissions = async (req, res, next) => {
+  try {
+    // 인증된 사용자 ID 사용 (또는 테스트용 ID)
+    const userId = req.user?.id || 1;
+    
+    const missions = await getUserOngoingMissions(userId);
+    res.status(StatusCodes.OK).json({ result: missions });
+  } catch (error) {
+    console.error("진행 중인 미션 목록 조회 오류:", error);
+    next(error);
+  }
+};
+
+// 미션 상태 변경
+export const handleUpdateMissionStatus = async (req, res, next) => {
+  try {
+    const { missionId } = req.params;
+    const { status, proof_image } = req.body;
+    
+    // 인증된 사용자 ID 사용 (또는 테스트용 ID)
+    const userId = req.user?.id || 1;
+    
+    // 먼저 사용자의 미션인지 확인
+    const userMission = await getUserMissionByUserAndMission(userId, missionId);
+    
+    if (!userMission) {
+      return res.status(StatusCodes.NOT_FOUND).json({ 
+        message: "해당 미션을 찾을 수 없거나 접근 권한이 없습니다." 
+      });
+    }
+    
+    // 상태 변경
+    let result;
+    if (status === '완료') {
+      result = await completeMission(userMission.id, proof_image);
+    } else {
+      result = await toggleMissionStatus(userMission.id, status);
+    }
+    
+    res.status(StatusCodes.OK).json({ 
+      message: "미션 상태가 성공적으로 변경되었습니다.",
+      result: result
+    });
+  } catch (error) {
+    console.error("미션 상태 변경 오류:", error);
 
 export const handleGetStoreMissions = async (req, res, next) => {
   try {

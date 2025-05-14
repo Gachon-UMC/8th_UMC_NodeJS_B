@@ -51,6 +51,7 @@ export const getUserMissionByUserAndMission = async (userId, missionId) => {
     throw new Error(`사용자 미션 조회 중 오류가 발생했습니다. (${err})`);
   }
 };
+
 export const getUserOngoingMissions = async (userId) => {
   try {
     const userMissions = await prisma.userMission.findMany({
