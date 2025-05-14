@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int               @id @default(autoincrement())
+  email            String            @unique(map: "email") @db.VarChar(255)
+  name             String            @db.VarChar(10)
+  gender           Int               @db.TinyInt
+  birth            DateTime          @db.Date
+  address          String            @db.VarChar(255)
+  detailAddress    String?           @map("detail_address") @db.VarChar(255)
+  phone            String            @map("phone") @db.Char(11)
+  foodPreference   FoodPreference[]
+  userMission      UserMission[]
+  userStoreReviews UserStoreReview[]
+
+  @@map("user")
+}
+
+model FoodCategory {
+  id             Int              @id @default(autoincrement())
+  category       String           @db.VarChar(10)
+  foodPreference FoodPreference[]
+
+  @@map("food_category")
+}
+
+model FoodPreference {
+  id             Int          @id @default(autoincrement())
+  userId         Int          @map("member_id")
+  foodCategoryId Int          @map("food_category_id")
+  foodCategory   FoodCategory @relation(fields: [foodCategoryId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
+
+  @@index([foodCategoryId], map: "f_category_id")
+  @@index([userId], map: "user_id")
+  @@map("food_preference")
+}
+
+model Store {
+  id               Int               @id @default(autoincrement())
+  name             String            @db.VarChar(50)
+  
+  mission          Mission[]
+  userStoreReviews UserStoreReview[]
+  
+  @@map("store")
+}
+
+model UserStoreReview {
+  id         Int      @id @default(autoincrement())
+  store      Store    @relation(fields: [storeId], references: [id])
+  storeId    Int      @db.Int @map("store_id")
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int      @db.Int @map("user_id")
+  content    String   @db.Text
+  starRating Int      @map("starRating") @default(5)
+  
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  
+  @@map("user_store_review")
+}
+
+model Mission {
+  id           Int            @id @default(autoincrement())
+  storeId      Int            @map("store_id")
+  content      String         @db.VarChar(50)
+  deadline     DateTime       @db.Date
+  reward       Int
+  store        Store          @relation(fields: [storeId], references: [id])
+
+  userMission UserMission[]
+
+  @@map("mission")
+}
+
+model UserMission {
+  id         Int     @id @default(autoincrement())
+  userId     Int     @map("user_id")
+  missionId  Int     @map("mission_id")
+  isFinished Int     @map("is_finished")
+  mission    Mission @relation(fields: [missionId], references: [id])
+  user       User    @relation(fields: [userId], references: [id])
+
+  @@map("user_mission")
+}
