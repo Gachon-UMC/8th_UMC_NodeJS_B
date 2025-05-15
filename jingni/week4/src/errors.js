@@ -1,5 +1,6 @@
 export class DuplicateUserEmailError extends Error {
   errorCode = "U001";
+  statusCode = 409;
 
   constructor(reason, data) {
     super(reason);
@@ -10,6 +11,7 @@ export class DuplicateUserEmailError extends Error {
 
 export class NotExistStoreId extends Error {
   errorCode = "S001";
+  statusCode = 404;
 
   constructor(reason, data) {
     super(reason);
@@ -20,6 +22,7 @@ export class NotExistStoreId extends Error {
 
 export class NotExistMissionId extends Error {
   errorCode = "M001";
+  statusCode = 404;
 
   constructor (reason, data){
     super(reason);
@@ -30,6 +33,7 @@ export class NotExistMissionId extends Error {
 
 export class IsChallenging extends Error {
   errorCode = "M002"
+  statusCode = 409;
 
   constructor (reason, data){
     super(reason);
@@ -40,6 +44,7 @@ export class IsChallenging extends Error {
 
 export class NoMissions extends Error{
   errorCode = "M003";
+  statusCode = 404;
 
   constructor(reason, data){
     super(reason);
@@ -49,7 +54,8 @@ export class NoMissions extends Error{
 }
 
 export class NotChallenging extends Error {
-  errorCode = "M004"
+  errorCode = "M004";
+  statusCode = 409;
 
   constructor (reason, data){
     super(reason);
@@ -60,6 +66,7 @@ export class NotChallenging extends Error {
 
 export class NoReviews extends Error{
   errorCode = "R002";
+  statusCode = 404;
 
   constructor(reason, data){
     super(reason);
