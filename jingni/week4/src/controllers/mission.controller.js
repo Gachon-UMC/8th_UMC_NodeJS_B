@@ -53,7 +53,7 @@ export const handleAddMission = async (req, res, next) => {
           schema: {
             type: "object",
             properties: {
-              resultType: { type: "string"" },
+              resultType: { type: "string" },
               error: {
                 type: "object",
                 properties: {
@@ -83,8 +83,7 @@ export const handleAddMission = async (req, res, next) => {
 export const handleChallengeMission = async (req,res, next) => {
   console.log("미션 도전하기를 요청했습니다 !");
   console.log("body: ",req.body);
-
-   /*
+  /*
     #swagger.summary = '미션 도전하기 API';
     #swagger.requestBody = {
       required: true,
@@ -93,8 +92,7 @@ export const handleChallengeMission = async (req,res, next) => {
           schema: {
             type: "object",
             properties: {
-              status: { type: "integer", example: 1 },
-              user_id: { type: "integer", example: 1}
+              status: { type: "integer", example: 1 }
             },
           }
         }
@@ -122,7 +120,7 @@ export const handleChallengeMission = async (req,res, next) => {
       }
     };
     #swagger.responses[404] = {
-      description: "미션 추가하기 실패 응답 - 해당 미션이 존재하지 않음",
+      description: "미션 도전하기 실패 응답 - 해당 미션이 존재하지 않음",
       content: {
         "application/json": {
           schema: {
@@ -144,7 +142,7 @@ export const handleChallengeMission = async (req,res, next) => {
       }
     };
     #swagger.responses[409] = {
-      description: "미션 추가하기 실패 응답 - 이미 도전중인 미션 ",
+      description: "미션 도전하기 실패 응답 - 이미 도전중인 미션 ",
       content: {
         "application/json": {
           schema: {
@@ -184,76 +182,15 @@ export const handleChallengeMission = async (req,res, next) => {
   res.status(StatusCodes.OK).success(updatedMission)
 }
 
-export const handleStoreMissions = async (req,res,next) =>{
-  console.log("특정 가게에 대한 미션 조회를 요청했습니다 !");
-  console.log("body: ",req.body);
-
-   /*
-    #swagger.summary = '특정 가게에 대한 미션 조회하기 API';
-    #swagger.requestBody = {
-      required: false,
-    };
-
-    #swagger.responses[200] = {
-      description: "특정 가게에 대한 미션 조회하기 성공 응답",
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            properties: {
-              resultType: { type: "string" },
-              error: { type: "object", nullable: true, example: null },
-              success: {
-                type: "object",
-                properties: {
-                  store_id: { type: "integer" },
-                },
-              }
-            }
-          }
-        }
-      }
-    };
-    #swagger.responses[404] = {
-      description: "특정 가게에 대한 미션 조회하기 실패 응답 - 해당 가게에 미션이 없음",
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            properties: {
-              resultType: { type: "string"" },
-              error: {
-                type: "object",
-                properties: {
-                  errorCode: { type: "string" },
-                  reason: { type: "string" },
-                  data: { type: "object" }
-                },
-              },
-              success: { type: "object", nullable: true }
-            }
-          }
-        }
-      }
-    };
-  */
-
-  const storeId = parseInt(req.params.storeId);
-  const cursor = typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0;
-  
-  const missions = await showStoreMissions(storeId, cursor);
-
-  res.status(StatusCodes.OK).success(missions)
-}
-
 export const handleCompleteMission = async (req,res,next) => {
   console.log("미션 완료하기 요청을 했습니다 !");
   console.log("body: ", req.body);
 
   /*
     #swagger.summary = '미션 완료하기 API';
+
     #swagger.requestBody = {
-      required: true,
+      required: false,
       content: {
         "application/json": {
           schema: {
@@ -265,6 +202,7 @@ export const handleCompleteMission = async (req,res,next) => {
         }
       }
     };
+    
     #swagger.responses[200] = {
       description: "미션 완료하기, 성공 응답",
       content: {
@@ -350,4 +288,63 @@ export const handleCompleteMission = async (req,res,next) => {
   );
 
   res.status(StatusCodes.OK).success(mission);
+}
+
+
+export const handleStoreMissions = async (req,res,next) =>{
+  console.log("특정 가게에 대한 미션 조회를 요청했습니다 !");
+  /*
+    #swagger.summary = '특정 가게에 대한 미션 조회하기 API';
+    #swagger.method = 'get'
+    #swagger.autoBody = false
+    #swagger.responses[200] = {
+      description: "특정 가게에 대한 미션 조회하기 성공 응답",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string" },
+              error: { type: "object", nullable: true, example: null },
+              success: {
+                type: "object",
+                properties: {
+                  store_id: { type: "string" }
+                },
+              }
+            }
+          }
+        }
+      }
+    };
+    #swagger.responses[404] = {
+      description: "특정 가게에 대한 미션 조회하기 실패 응답 - 해당 가게에 미션이 없음",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string"" },
+              error: {
+                type: "object",
+                properties: {
+                  errorCode: { type: "string" },
+                  reason: { type: "string" },
+                  data: { type: "object" }
+                },
+              },
+              success: { type: "object", nullable: true }
+            }
+          }
+        }
+      }
+    };
+  */
+
+  const storeId = parseInt(req.params.storeId);
+  const cursor = typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0;
+  
+  const missions = await showStoreMissions(storeId, cursor);
+
+  res.status(StatusCodes.OK).success(missions)
 }
