@@ -142,6 +142,56 @@ export const handleShowReviews = async (req, res, next) => {
 
 export const handleMyReviews = async (req, res, next)=>{
 
+  /*
+    #swagger.summary = '내가 작성한 리뷰 목록 조회하기 API';
+    #swagger.requestBody = {
+     required: false,
+    };
+    #swagger.responses[200] = {
+      description: "나의 리뷰 목록 조회하기 성공 응답",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string" },
+              error: { type: "object", nullable: true, example: null },
+              success: {
+                type: "object",
+                properties: {
+                  user_id: { type: "integer" }
+                },
+              }
+            }
+          }
+        }
+      }
+    };
+    #swagger.responses[404] = {
+      description: "나의 리뷰 목록 조회 실패 - 내가 작성한 리뷰가 없음",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string"" },
+              error: {
+                type: "object",
+                properties: {
+                  errorCode: { type: "string" },
+                  reason: { type: "string" },
+                  data: { type: "object" }
+                },
+              },
+              success: { type: "object", nullable: true }
+            }
+          }
+        }
+      }
+    };
+  */
+
+
   const userId = req.user?.id || 2;
   const cursor = typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0;
 
