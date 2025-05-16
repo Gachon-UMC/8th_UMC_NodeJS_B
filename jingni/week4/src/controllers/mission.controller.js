@@ -84,6 +84,89 @@ export const handleChallengeMission = async (req,res, next) => {
   console.log("미션 도전하기를 요청했습니다 !");
   console.log("body: ",req.body);
 
+   /*
+    #swagger.summary = '미션 도전하기 API';
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              status: { type: "integer", example: 1 },
+              user_id: { type: "integer", example: 1}
+            },
+          }
+        }
+      }
+    };
+    #swagger.responses[200] = {
+      description: "미션 도전하기 성공 응답",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string" },
+              error: { type: "object", nullable: true, example: null },
+              success: {
+                type: "object",
+                properties: {
+                  status: { type: "integer" },
+                  user_id: { type: "integer" }
+                },
+              }
+            }
+          }
+        }
+      }
+    };
+    #swagger.responses[404] = {
+      description: "미션 추가하기 실패 응답 - 해당 미션이 존재하지 않음",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string"" },
+              error: {
+                type: "object",
+                properties: {
+                  errorCode: { type: "string" },
+                  reason: { type: "string" },
+                  data: { type: "object" }
+                },
+              },
+              success: { type: "object", nullable: true }
+            }
+          }
+        }
+      }
+    };
+    #swagger.responses[409] = {
+      description: "미션 추가하기 실패 응답 - 이미 도전중인 미션 ",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string"" },
+              error: {
+                type: "object",
+                properties: {
+                  errorCode: { type: "string" },
+                  reason: { type: "string" },
+                  data: { type: "object" }
+                },
+              },
+              success: { type: "object", nullable: true }
+            }
+          }
+        }
+      }
+    };
+  */
+
   const missionId = req.params.missionId;
   const userId = req.user?.id || 1;
 
