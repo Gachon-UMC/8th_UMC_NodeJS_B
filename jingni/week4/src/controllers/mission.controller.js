@@ -4,6 +4,71 @@ import { addMission, challengeMission, showStoreMissions, completeMission } from
 
 export const handleAddMission = async (req, res, next) => {
   console.log("미션 추가를 요청했습니다!");
+   /*
+    #swagger.summary = '가게에 미션 추가하기 API';
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              title: { type: "string", example: "뿡빵뿡 미션" },
+              content: { type: "string", example: "해봐라 미션 에베베" },
+              point: { type: "integer", example: 30 },
+              deadline: { type: "string", format: "date", example: "2025-05-16" }
+            },
+          }
+        }
+      }
+    };
+    #swagger.responses[200] = {
+      description: "가게에 미션 추가하기 성공 응답",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string" },
+              error: { type: "object", nullable: true, example: null },
+              success: {
+                type: "object",
+                properties: {
+                  title: { type: "string" },
+                  content: { type: "string" },
+                  point: { type: "integer" },
+                  deadline: { type: "string", format: "date" }
+                  store_id: { type: "integer" }
+                },
+              }
+            }
+          }
+        }
+      }
+    };
+    #swagger.responses[404] = {
+      description: "미션 추가하기 실패 응답 - 해당 가게가 존재하지 않음",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string"" },
+              error: {
+                type: "object",
+                properties: {
+                  errorCode: { type: "string" },
+                  reason: { type: "string" },
+                  data: { type: "object" }
+                },
+              },
+              success: { type: "object", nullable: true }
+            }
+          }
+        }
+      }
+    };
+  */
 
   const storeId = Number(req.params.storeId)
   const mission = await addMission(
