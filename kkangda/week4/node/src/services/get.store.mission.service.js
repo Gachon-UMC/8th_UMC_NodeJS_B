@@ -1,12 +1,12 @@
 import { responseFromMissions } from "../dtos/get.store.mission.dto.js";
-import { DuplicateUserEmailError } from "../errors.js";
+import { NotFoundStoreIdOrCusorError } from "../errors.js";
 import { getAllStoreMission } from "../repositories/get.store.mission.repository.js";
 
 export const listStoreMission = async (storeId, cursor) => {
     const missions = await getAllStoreMission(storeId, cursor);
 
     if (missions === null) {
-        throw new DuplicateUserEmailError("store ID가 일치하지 않거나 cursor가 올바르지 않습니다.", {
+        throw new NotFoundStoreIdOrCusorError("store ID가 일치하지 않거나 cursor가 올바르지 않습니다.", {
             storeId,
             cursor,
         });
