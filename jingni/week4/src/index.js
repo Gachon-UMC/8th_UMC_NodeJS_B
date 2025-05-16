@@ -9,6 +9,7 @@ import { handleAddReview, handleShowReviews, handleMyReviews } from "./controlle
 
 import swaggerAutogen from "swagger-autogen";
 import swaggerUiExpress from "swagger-ui-express";
+import components from "../swagger/components.js";
 
 dotenv.config();
 
@@ -95,6 +96,8 @@ app.get("/openapi.json", async (req, res, next) => {
       description: "UMC 8th Node.js 테스트 프로젝트입니다.",
     },
     host: "localhost:3000",
+    schemes: ["http"],
+    components: components,
   };
 
   const result = await swaggerAutogen(options)(outputFile, routes, doc);
