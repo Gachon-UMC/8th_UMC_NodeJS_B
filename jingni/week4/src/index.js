@@ -7,6 +7,10 @@ import { handleUserSignUp } from "./controllers/user.controller.js";
 import { handleAddMission, handleChallengeMission, handleStoreMissions, handleCompleteMission } from "./controllers/mission.controller.js";
 import { handleAddReview, handleShowReviews, handleMyReviews } from "./controllers/review.controller.js";
 
+import swaggerAutogen from "swagger-autogen";
+import swaggerUiExpress from "swagger-ui-express";
+import components from "../swagger/components.js";
+
 dotenv.config();
 
 const app = express()
@@ -64,6 +68,40 @@ app.use((err, req, res, next) => {
     reason: err.reason || err.message || null,
     data: err.data || null,
   });
+});
+
+//swagger 세팅
+app.use(
+  "/docs",
+  swaggerUiExpress.serve,
+  swaggerUiExpress.setup({}, {
+    swaggerOptions: {
+      url: "/openapi.json",
+    },
+  })
+);
+
+app.get("/openapi.json", async (req, res, next) => {
+  // #swagger.ignore = true Swagger UI에서 굳이 보이지 않아도 되는 부분
+  const options = {
+    openapi: "3.0.0",
+    disableLogs: true,
+    writeOutputFile: false,
+  };
+  const outputFile = "/dev/null"; // 파일 출력은 사용하지 않습니다.
+  const routes = ["./src/index.js"];
+  const doc = {
+    info: {
+      title: "UMC 8th",
+      description: "UMC 8th Node.js 테스트 프로젝트입니다.",
+    },
+    host: "localhost:3000",
+    schemes: ["http"],
+    components: components,
+  };
+
+  const result = await swaggerAutogen(options)(outputFile, routes, doc);
+  res.json(result ? result.data : null);
 });
 
 app.listen(port, () => {
