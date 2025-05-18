@@ -100,9 +100,43 @@ app.get("/openapi.json", async (req, res, next) => {
     const outputFile = "/dev/null"; // 파일 출력은 사용하지 않습니다.
     const routes = ["./src/index.js"];
     const doc = {
+        openapi: "3.0.0",
         info: {
             title: "UMC 7th",
             description: "UMC 7th Node.js 테스트 프로젝트입니다.",
+        },
+        components: {
+            schemas: {
+                User: {
+                    type: "object",
+                    properties: {
+                        email: { type: "string" },
+                        name: { type: "string" },
+                        gender: { type: "string" },
+                        birth: { type: "string", format: "date" },
+                        address: { type: "string" },
+                        detailAddress: { type: "string" },
+                        phoneNumber: { type: "string" },
+                        preferences: { type: "array", items: { type: "number" } },
+                    },
+                },
+                Store: {
+                    type: "object",
+                    properties: {
+                        id: { type: "number" },
+                        name: { type: "string" },
+                    },
+                },
+                Mission: {
+                    type: "object",
+                    properties: {
+                        storeId: { type: "number" },
+                        content: { type: "string" },
+                        deadline: { type: "string", format: "date-time" },
+                        reward: { type: "number" },
+                    },
+                },
+            },
         },
         host: "localhost:3000",
     };
