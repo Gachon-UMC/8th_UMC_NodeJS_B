@@ -3,7 +3,7 @@ import { prisma } from "../db.config.js";
 // user mission 데이터 삽입
 export const addUserMission = async (data) => {
     const mission = await prisma.userMission.findFirst({
-        where: { userId: data.userId, missionId: data.missionId, isFinished: 0 },
+        where: { userId: data.userId, missionId: data.missionId, isFinished: data.isFinished },
     });
 
     // 이미 도전 중인 미션인지 검증
