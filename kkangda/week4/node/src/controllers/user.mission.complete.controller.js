@@ -6,7 +6,6 @@ export const handleUserMissionComplete = async (req, res, next) => {
     /*
     #swagger.summary = '내가 진행 중인 미션을 진행 완료로 바꾸기 API';
 
-
     #swagger.parameters['userId'] = {
     in: 'path',
     required: true,

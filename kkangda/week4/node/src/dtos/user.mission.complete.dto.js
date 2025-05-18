@@ -7,6 +7,9 @@ export const bodyToUserMission = (userId, body) => {
 
 export const responseFromUserMission = (body) => {
     return {
-        data: body,
+        id: body.id,
+        store: body.store,
+        content: body.content,
+        reward: body.reward,
     };
 };

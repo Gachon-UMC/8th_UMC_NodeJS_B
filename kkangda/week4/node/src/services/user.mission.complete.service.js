@@ -6,5 +6,5 @@ export const userMissionComplete = async (data) => {
 
     const result = await getUserMission(updated);
 
-    return responseFromUserMission(result);
+    return result.map(responseFromUserMission);
 };
