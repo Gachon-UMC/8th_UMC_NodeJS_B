@@ -15,7 +15,7 @@ const existingUser = await getUserByEmail(userData.email);
     throw new DuplicateUserEmailError("이미 존재하는 이메일입니다.", userData);
   }
   // 테스트 환경에서는 간단하게 비밀번호 처리
-  const passwordHash = userData.password + "_hashed"; // 단순히 끝에 hashed추가 (테스트용이니까)
+  const passwordHash = userData.password + "_hashed"; // 단순히 접미사 추가 (테스트용)
   
   // 사용자 정보 저장
   const userId = await addUser({
