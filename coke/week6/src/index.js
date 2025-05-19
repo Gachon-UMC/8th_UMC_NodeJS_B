@@ -7,6 +7,9 @@ import userRouter from "./routers/user.router.js"; // 사용자 라우터
 import reviewRouter from './routers/review.router.js'; //리뷰 라우터
 import storeRouter from './routers/store.router.js'; //미션추가 라우터
 import missionRouter from './routers/mission.router.js';
+import swaggerAutogen from "swagger-autogen";
+import swaggerUiExpress from "swagger-ui-express";
+
 
 // __dirname 설정 
 const __filename = fileURLToPath(import.meta.url);
@@ -36,6 +39,39 @@ app.use((req, res, next) => {
   next();
 });
 
+//Swagger 세팅하는거
+
+app.use(
+  "/docs",
+  swaggerUiExpress.serve,
+  swaggerUiExpress.setup({}, {
+    swaggerOptions: {
+      url: "/openapi.json",
+    },
+  })
+);
+
+app.get("/openapi.json", async (req, res, next) => {
+  // #swagger.ignore = true
+  const options = {
+    openapi: "3.0.0",
+    disableLogs: true,
+    writeOutputFile: false,
+  };
+  const outputFile = "/dev/null"; // 파일 출력은 사용하지 않습니다.
+  const routes = ["./src/index.js"];
+  const doc = {
+    info: {
+      title: "UMC 7th",
+      description: "UMC 7th Node.js 테스트 프로젝트입니다.",
+    },
+    host: "localhost:3000",
+  };
+
+  const result = await swaggerAutogen(options)(outputFile, routes, doc);
+  res.json(result ? result.data : null);
+});
+
 
 app.use(cors());
 app.use(express.static('public'));
@@ -47,7 +83,7 @@ app.get("/", (req, res) => {
 });
 
 // 개별 라우트 대신 라우터 모듈 사용
-app.use("/api/users", userRouter); 
+app.use("/api/v1/users", userRouter); 
 app.use('/api/places', reviewRouter);
 app.use('/api/stores', storeRouter);
 app.use('/api/missions', missionRouter);
