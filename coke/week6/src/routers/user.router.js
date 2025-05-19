@@ -1,6 +1,5 @@
 import express from 'express';
 import { handleUserSignUp } from '../controllers/user.controller.js';  // 현재 존재하는 함수만 임포트
-import { handleGetUserReviews } from '../controllers/review.controller.js';
 
 const router = express.Router();
 
