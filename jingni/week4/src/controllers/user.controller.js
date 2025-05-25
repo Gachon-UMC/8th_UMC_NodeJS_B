@@ -18,7 +18,6 @@ export const handleUserSignUp = async (req, res, next) => {
               birth: { type: "string", format: "date" },
               address: { type: "string" },
               phone: { type: "string" },
-              password: { type: "string" },
               preferences: { type: "array", items: { type: "number" } }
             },
           }

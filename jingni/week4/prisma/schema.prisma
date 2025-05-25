@@ -16,7 +16,6 @@ datasource db {
 
 model User {
   id            Int      @id @default(autoincrement())
-  password      String   @db.VarChar(255)
   email         String   @unique(map: "email") @db.VarChar(255)
   name          String   @db.VarChar(100)
   gender        Int      @db.Int
@@ -104,4 +103,13 @@ model DoMission{
   mission      Mission   @relation(fields: [missionId], references: [id])
 
   @@map("do_mission")
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String   @db.VarChar(512)
+  expiresAt DateTime @map("expires_at")
+
+  @@map("session")
 }

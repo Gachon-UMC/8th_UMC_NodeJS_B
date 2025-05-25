@@ -4,7 +4,6 @@ export const bodyToUser = (body) => {
     return {
       email: body.email,
       name: body.name,
-      password: body.password,
       gender: body.gender,
       birth: birth,
       address: body.address || "",

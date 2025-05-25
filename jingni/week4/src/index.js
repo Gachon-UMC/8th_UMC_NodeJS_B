@@ -11,7 +11,17 @@ import swaggerAutogen from "swagger-autogen";
 import swaggerUiExpress from "swagger-ui-express";
 import components from "../swagger/components.js";
 
+import { PrismaSessionStore } from "@quixo3/prisma-session-store";
+import session from "express-session";
+import passport from "passport";
+import { googleStrategy } from "./auth.config.js";
+import { prisma } from "./db.config.js";
+
 dotenv.config();
+
+passport.use(googleStrategy);
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));
 
 const app = express()
 // const port = 3000
@@ -45,17 +55,7 @@ app.use(express.static('public'));
 // request의 본문을 json으로 해석할 수 있도록 함 (JSON 형태의 요청 body를 파싱하기 위함)         
 app.use(express.json());
 // 단순 객체 문자열 형태로 본문 데이터 해석                    
-app.use(express.urlencoded({ extended: false }));     
-
-app.post("/api/v1/users/signup", handleUserSignUp); //POST 요청을 보내면 handleUserSingup이 실행될 것
-app.post("/api/v1/users/missions/:missionId", handleChallengeMission);
-app.post("/api/v1/:storeId/missions/users", handleAddMission);
-app.post("/api/v1/:storeId/reviews/users",handleAddReview);
-app.patch("/api/v1/users/missions/:missionId",handleCompleteMission);
-app.get("/api/v1/stores/:storeId/reviews", handleShowReviews);
-app.get("/api/v1/users/reviews", handleMyReviews);
-app.get("/api/v1/:storeId/missions",handleStoreMissions);
-
+app.use(express.urlencoded({ extended: false }));
 
 //전역 오류 처리하기 위한 미들웨어
 app.use((err, req, res, next) => {
@@ -70,6 +70,25 @@ app.use((err, req, res, next) => {
   });
 });
 
+app.use(
+  session({
+    cookie: {
+      maxAge: 7 * 24 * 60 * 60 * 1000, // ms
+    },
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.EXPRESS_SESSION_SECRET,
+    store: new PrismaSessionStore(prisma, {
+      checkPeriod: 2 * 60 * 1000, // ms
+      dbRecordIdIsSessionId: true,
+      dbRecordIdFunction: undefined,
+    }),
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 //swagger 세팅
 app.use(
   "/docs",
@@ -79,6 +98,31 @@ app.use(
       url: "/openapi.json",
     },
   })
+);
+
+app.get("/", (req, res) => {
+  // #swagger.ignore = true
+  console.log(req.user);
+  res.send("Hello World!");
+});
+
+app.post("/api/v1/users/signup", handleUserSignUp); //POST 요청을 보내면 handleUserSingup이 실행될 것
+app.post("/api/v1/users/missions/:missionId", handleChallengeMission);
+app.post("/api/v1/:storeId/missions/users", handleAddMission);
+app.post("/api/v1/:storeId/reviews/users",handleAddReview);
+app.patch("/api/v1/users/missions/:missionId",handleCompleteMission);
+app.get("/api/v1/stores/:storeId/reviews", handleShowReviews);
+app.get("/api/v1/users/reviews", handleMyReviews);
+app.get("/api/v1/:storeId/missions",handleStoreMissions);
+
+app.get("/oauth2/login/google", passport.authenticate("google"));
+app.get(
+  "/oauth2/callback/google",
+  passport.authenticate("google", {
+    failureRedirect: "/oauth2/login/google",
+    failureMessage: true,
+  }),
+  (req, res) => res.redirect("/")
 );
 
 app.get("/openapi.json", async (req, res, next) => {
@@ -107,3 +151,4 @@ app.get("/openapi.json", async (req, res, next) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
+
