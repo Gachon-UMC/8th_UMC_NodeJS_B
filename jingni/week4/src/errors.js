@@ -1,5 +1,5 @@
 export class DuplicateUserEmailError extends Error {
-  errorCode = "U001";
+  errorCode = "U101";
   statusCode = 409;
 
   constructor(reason, data) {
