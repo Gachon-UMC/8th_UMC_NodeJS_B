@@ -1,7 +1,7 @@
 import cors from "cors";
 import dotenv from "dotenv";
 // const express = require('express')  // -> CommonJS
-import express from "express";         // -> ES Module
+import express, { Router } from "express";         // -> ES Module
 
 import { handleUserSignUp } from "./controllers/user.controller.js";
 import { handleAddMission, handleChallengeMission, handleStoreMissions, handleCompleteMission } from "./controllers/mission.controller.js";
@@ -14,12 +14,13 @@ import components from "../swagger/components.js";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import session from "express-session";
 import passport from "passport";
-import { googleStrategy } from "./auth.config.js";
+import { googleStrategy, naverStrategy } from "./auth.config.js";
 import { prisma } from "./db.config.js";
 
 dotenv.config();
 
 passport.use(googleStrategy);
+passport.use(naverStrategy);
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
@@ -120,6 +121,16 @@ app.get(
   "/oauth2/callback/google",
   passport.authenticate("google", {
     failureRedirect: "/oauth2/login/google",
+    failureMessage: true,
+  }),
+  (req, res) => res.redirect("/")
+);
+
+app.get("/oauth2/login/naver", passport.authenticate("naver"));
+app.get(
+  "/oauth2/callback/naver",
+  passport.authenticate("naver", {
+    failureRedirect: "oauth2/login/naver",
     failureMessage: true,
   }),
   (req, res) => res.redirect("/")

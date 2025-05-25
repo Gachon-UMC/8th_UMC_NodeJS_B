@@ -1,5 +1,8 @@
 import dotenv from "dotenv";
+
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import { Strategy as NaverStrategy } from 'passport-naver-v2';
+
 import { prisma } from "./db.config.js";
 
 
@@ -45,3 +48,50 @@ const googleVerify = async (profile) => {
   return { id: created.id, email: created.email, name: created.name };
 };
 
+export const naverStrategy = new NaverStrategy(
+    {
+        clientID: process.env.PASSPORT_NAVER_CLIENT_ID,
+        clientSecret: process.env.PASSPORT_NAVER_CLIENT_SECRET,
+        callbackURL: "http://localhost:3000/oauth2/callback/naver",
+        scope: ["name", "email", "gender", "birthyear", "birthday", "mobile"],
+        state: true,
+    },
+    (accessToken, refreshToken, profile, cb)=>{
+        return naverVerify(profile)
+            .then((user) => cb(null, user))
+            .catch((err) => cb(err));        
+    }
+);
+
+const naverVerify = async (profile) => {
+    console.log('NAVER PROFILE:', JSON.stringify(profile, null, 2));
+
+    const response = profile._json?.response;
+    const email = response.email;
+    //Naver에는 생년월일 필드가 없음 -> 조합해야함
+    const fullBirthDate = new Date(`${response.birthyear}-${response.birthday}`);
+    //Naver Response는 F/M로 성별 구분 -> 나의 table은 0과 1로 구분
+    const genderValue = response.gender === "F" ? 0 : 1;
+
+    if(!email){
+        throw new Error(`profile.email was not found: ${profile}`);
+    }
+
+    const user = await prisma.user.findFirst({ where: {email} });
+    if(user !=null){
+        return { id: user.id, email: user.email, name: user.name };
+    }
+
+    const created = await prisma.user.create({
+        data:{
+            email,
+            name: response.name,
+            gender: genderValue,
+            birth: fullBirthDate,
+            address: "추후 수정",
+            phone: response.mobile
+        },
+    });
+
+    return { id: created.id, email: created.email, name: created.name, gender: created.gender, birth: created.birth, phone: created.phone};
+}
