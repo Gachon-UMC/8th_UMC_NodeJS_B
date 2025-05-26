@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { Strategy as NaverStrategy } from 'passport-naver-v2';
 import { Strategy as KakaoStrategy } from 'passport-kakao';
+import { Strategy as GithubStrategy } from 'passport-github';
 
 import { prisma } from "./db.config.js";
 
@@ -99,7 +100,6 @@ const naverVerify = async (profile) => {
 
 export const kakaoStrategy = new KakaoStrategy(
     {
-        
         clientID: process.env.PASSPORT_KAKAO_REST_API_KEY,
         callbackURL: "/oauth2/callback/kakao",
         scope: [ "account_email" ],
@@ -140,4 +140,43 @@ const kakaoVerify = async (profile) => {
    });
 
    return { id: created.id, email: created.email};
+}
+
+export const githubStrategy = new GithubStrategy(
+    {
+        clientID: process.env.PASSPORT_GITHUB_CLIENT_ID,
+        clientSecret: process.env.PASSPORT_GITHUB_CLIENT_SECRET,
+        callbackURL: "http://localhost:3000/oauth2/callback/github",
+        scope: [ "read:user", "user:email"],
+        state: true
+    }, 
+    (accessToken, refreshToken, profile, cb) => {
+        return githubVerify(profile)
+            .then((user) => cb(null,user))
+            .catch((err) => cb(err));
+    }
+);
+
+const githubVerify = async (profile) => {
+    console.log("GITHUB PROFILE: ", JSON.stringify(profile, null, 2));
+    const email = profile.emails?.[0]?.value;
+    if(!email){
+        throw new Error(`profile.email was not found: ${profile}`);
+    }
+    const user = await prisma.user.findFirst({ where: { email } });
+    if(user !== null){
+        return { id: user.id, email: user.email, name: user.name };
+    }
+    const created = await prisma.user.create({
+        data: {
+            email,
+            name: profile.username,
+            gender: -1,
+            birth: new Date(1970, 0, 1),
+            address: "추후 수정",
+            phone: "추후 수정",
+        },
+    });
+
+    return { id: created.id, email: created.email, name: created.name };
 }
