@@ -1,10 +1,13 @@
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
+import { dateMiddleware } from "../prisma/dateMiddleware.js";
 
-export const prisma = new PrismaClient({ log: ["query"] });
+export const prisma = new PrismaClient(); // 인자로 { log: ["query"] } 주면 SQL 쿼리 출력됨
 
 dotenv.config();
+
+prisma.$use(dateMiddleware);
 
 export const pool = mysql.createPool({
     host: process.env.DB_HOST || "localhost", // mysql의 hostname
