@@ -14,13 +14,14 @@ import components from "../swagger/components.js";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import session from "express-session";
 import passport from "passport";
-import { googleStrategy, naverStrategy } from "./auth.config.js";
+import { googleStrategy, kakaoStrategy, naverStrategy } from "./auth.config.js";
 import { prisma } from "./db.config.js";
 
 dotenv.config();
 
 passport.use(googleStrategy);
 passport.use(naverStrategy);
+passport.use(kakaoStrategy);
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
@@ -130,6 +131,16 @@ app.get("/oauth2/login/naver", passport.authenticate("naver"));
 app.get(
   "/oauth2/callback/naver",
   passport.authenticate("naver", {
+    failureRedirect: "oauth2/login/naver",
+    failureMessage: true,
+  }),
+  (req, res) => res.redirect("/")
+);
+
+app.get("/oauth2/login/kakao", passport.authenticate("kakao"));
+app.get(
+  "/oauth2/callback/kakao",
+  passport.authenticate("kakao", {
     failureRedirect: "oauth2/login/naver",
     failureMessage: true,
   }),

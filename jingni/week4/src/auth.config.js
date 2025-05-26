@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { Strategy as NaverStrategy } from 'passport-naver-v2';
+import { Strategy as KakaoStrategy } from 'passport-kakao';
 
 import { prisma } from "./db.config.js";
 
@@ -94,4 +95,49 @@ const naverVerify = async (profile) => {
     });
 
     return { id: created.id, email: created.email, name: created.name, gender: created.gender, birth: created.birth, phone: created.phone};
+}
+
+export const kakaoStrategy = new KakaoStrategy(
+    {
+        
+        clientID: process.env.PASSPORT_KAKAO_REST_API_KEY,
+        callbackURL: "/oauth2/callback/kakao",
+        scope: [ "account_email" ],
+        state: true
+    },
+    (accessToken, refreshToken, profile, cb) => {
+        return kakaoVerify(profile)
+            .then((user) => cb(null,user))
+            .catch((err) => cb(err));
+    }
+);
+
+const kakaoVerify = async (profile) => {
+    console.log('KAKAO PROFILE:', JSON.stringify(profile, null, 2));
+    const response = profile._json?.kakao_account;
+
+    if(!response.email){
+        throw new Error(`profile.email was not found: ${profile}`);
+    }
+
+    const user = await prisma.user.findFirst({
+        where: { email: response.email }
+    });
+
+   if(user!== null){
+    return { id: user.id, email: user.email };    
+   }
+
+   const created = await prisma.user.create({
+    data: {
+      email: response.email,
+      name: "추후 수정",
+      gender: -1,
+      birth: "추후 수정",
+      address: "추후 수정",
+      phone: "추후 수정",
+    },
+   });
+
+   return { id: created.id, email: created.email};
 }
