@@ -373,3 +373,12 @@ model Log {
   @@index([user_id])
   @@map("LOG")
 }
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String   @db.VarChar(512)
+  expiresAt DateTime @map("expires_at")
+
+  @@map("session")
+}
