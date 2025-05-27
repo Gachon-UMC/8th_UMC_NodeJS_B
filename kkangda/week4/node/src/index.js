@@ -16,6 +16,7 @@ import session from "express-session";
 import passport from "passport";
 import { googleStrategy, naverStrategy } from "./auth.config.js";
 import { prisma } from "./db.config.js";
+import { handleUserInfo } from "./controllers/user.info.controller.js";
 
 dotenv.config();
 
@@ -91,6 +92,8 @@ app.patch("/users/:userId/missions", handleUserMissionComplete);
 app.get("/stores/:storeId/missions", handleListStoreMission);
 
 app.get("/users/:userId/reviews", handleListUserReviews);
+
+app.patch("/users/:userId", handleUserInfo);
 
 /**
  * 전역 오류를 처리하기 위한 미들웨어
