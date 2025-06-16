@@ -72,7 +72,7 @@ export const handleChallengeMission = async (req,res, next) => {
   */
 
   const missionId = req.params.missionId;
-  const userId = req.user?.id || 1;
+  const userId = req.user.id;
 
   if (!userId) {
       return res.status(StatusCodes.UNAUTHORIZED).json({ message: "로그인이 필요합니다." });
@@ -122,7 +122,7 @@ export const handleCompleteMission = async (req,res,next) => {
 
 
   const missionId = Number(req.params.missionId);
-  const userId = req.user?.id || 1;
+  const userId = req.user.id
 
   if (!userId) {
       return res.status(StatusCodes.UNAUTHORIZED).json({ message: "로그인이 필요합니다." });

@@ -33,7 +33,7 @@ export const handleAddReview = async (req, res, next) => {
   console.log("body:", req.body); 
 
   const storeId = req.params.storeId;
-  const userId = req.user?.id || 1; // test용으로 user_id = 1 임시 허용
+  const userId = req.user.id;
 
   if (!userId) {
     return res.status(StatusCodes.UNAUTHORIZED).json({ message: "로그인이 필요합니다." });
@@ -85,7 +85,7 @@ export const handleMyReviews = async (req, res, next)=>{
   */
 
 
-  const userId = req.user?.id || 2;
+  const userId = req.user?.id;
   const cursor = typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0;
 
   const reviews = await showMyReviews(userId, cursor);
