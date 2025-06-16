@@ -41,7 +41,6 @@ export const handleUserSignUp = async (req, res, next) => {
 
 export const handleUserModify = async (req, res, next) => {
   console.log("회원정보 수정을 요청했습니다!");
-  console.log("body:", req.body); 
   /*
     #swagger.summary = '회원 정보 수정 API';
     #swagger.requestBody = {
@@ -78,7 +77,7 @@ export const handleUserModify = async (req, res, next) => {
   */
   
   const userId = parseInt(req.params.userId, 10);
-  console.log(req.body)
+  console.log("body:", req.body); 
   const user = await userModify(userId, bodyToUser({
     ...req.body,
   }));
