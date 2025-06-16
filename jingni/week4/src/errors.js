@@ -9,6 +9,29 @@ export class DuplicateUserEmailError extends Error {
   }
 }
 
+export class NotExistUserId extends Error {
+  errorCode = "U001";
+  statusCode = 404;
+
+  constructor(reason, data) {
+    super(reason);
+    this.reason = reason;
+    this.data = data;
+  }
+  
+}
+
+export class NoModifyData extends Error {
+  errorCode = "U002";
+  statusCode = 400;
+
+  constructor(reason, data) {
+    super(reason);
+    this.reason = reason;
+    this.data = data;
+  }
+}
+
 export class NotExistStoreId extends Error {
   errorCode = "S001";
   statusCode = 404;

@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 // const express = require('express')  // -> CommonJS
 import express, { Router } from "express";         // -> ES Module
 
-import { handleUserSignUp } from "./controllers/user.controller.js";
+import { handleUserSignUp, handleUserModify } from "./controllers/user.controller.js";
 import { handleAddMission, handleChallengeMission, handleStoreMissions, handleCompleteMission } from "./controllers/mission.controller.js";
 import { handleAddReview, handleShowReviews, handleMyReviews } from "./controllers/review.controller.js";
 
@@ -117,6 +117,7 @@ app.patch("/api/v1/users/missions/:missionId",handleCompleteMission);
 app.get("/api/v1/stores/:storeId/reviews", handleShowReviews);
 app.get("/api/v1/users/reviews", handleMyReviews);
 app.get("/api/v1/:storeId/missions",handleStoreMissions);
+app.patch("/api/v1/users/:userId",handleUserModify);
 
 app.get("/oauth2/login/google", passport.authenticate("google"));
 app.get(
