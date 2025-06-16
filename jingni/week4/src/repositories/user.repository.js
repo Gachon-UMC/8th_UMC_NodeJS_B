@@ -1,4 +1,5 @@
 import { prisma } from "../db.config.js";
+import { NotExistUserId } from "../errors.js";
 
 // User 데이터 삽입
 export const addUser = async (data) => {
@@ -13,7 +14,9 @@ export const addUser = async (data) => {
 
 // 사용자 정보 얻기
 export const getUser = async (userId) => {
-  const user = await prisma.user.findFirstOrThrow({ where: { id: userId } });
+  console.log("userId: ",userId);
+  
+  const user = await prisma.user.findFirst({ where: { id: userId } });
   return user;
 };
 
@@ -42,3 +45,13 @@ export const getUserPreferencesByUserId = async (userId) => {
 
   return preferences;
 };
+
+export const modifyUser = async (userId, data) => {
+  const updatedUser = await prisma.user.update({
+    where: { id: userId },
+    data: data,
+  });
+
+  return updatedUser;
+}
+

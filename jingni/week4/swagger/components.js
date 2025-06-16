@@ -126,7 +126,6 @@ export default {
         },
       },
     },
-
     IsNotChallenging: {
       description: "도전중인 미션이 아닙니다.",
       content: {
@@ -171,6 +170,49 @@ export default {
         },
       },
     },
-    
+    NotFoundUser: {
+      description: "사용자를 찾을 수 없습니다.",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string" },
+              error: {
+                type: "object",
+                properties: {
+                  errorCode: { type: "string" },
+                  reason: { type: "string" },
+                  data: { type: "object", nullable: true },
+                },
+              },
+              success: { type: "object", nullable: true },
+            },
+          },
+        },
+      },
+    },
+    NoModifyInfo: {
+      description: "수정할 정보가 없습니다.",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string" },
+              error: {
+                type: "object",
+                properties: {
+                  errorCode: { type: "string" },
+                  reason: { type: "string" },
+                  data: { type: "object", nullable: true },
+                },
+              },
+              success: { type: "object", nullable: true },
+            },
+          },
+        },
+      },
+    }
   }
 };
