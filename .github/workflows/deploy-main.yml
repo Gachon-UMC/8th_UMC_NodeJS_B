@@ -35,7 +35,7 @@ jobs:
               run: |
                   ssh playground-umc-8th 'sudo mkdir -p /opt/app'
                   ssh playground-umc-8th 'sudo chown ubuntu:ubuntu /opt/app'
-                  scp -r ./[!.]* playground-umc-8th:/opt/app
+                  scp -r ./ralph/* playground-umc-8th:/opt/app
 
             - name: Install dependencies
               run: |
