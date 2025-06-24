@@ -1,119 +1,100 @@
 import { pool, prisma } from "../../db.config.js";
-
+function convertBigIntToString(obj) {
+    return JSON.parse(
+        JSON.stringify(obj, (key, value) =>
+            typeof value === "bigint" ? Number(value) : value
+        )
+    );
+}
 // User 데이터 삽입
-export const addUser = async (data) => {
-    const user = await prisma.user.findFrist({
+export const addUser = async ({ data }) => {
+    const user = await prisma.user.findFirst({
         where: {
             email: data.email,
         },
     });
-    console.log(user);
+
     if (user) {
-        console.log("이미 존재하는 id입니다.");
         return null;
     }
-    // const created = await prisma.user.create({
-    //     data: data,
-    // });
-    // return created.id;
-    // try {
-    //     const [confirm] = await pool.query(
-    //         `SELECT EXISTS(SELECT 1 FROM user WHERE email = ?) as isExistEmail;`,
-    //         data.email
-    //     );
 
-    //     if (confirm[0].isExistEmail) {
-    //         return null;
-    //     }
-
-    //     const [result] = await pool.query(
-    //         `INSERT INTO user (name,password,email,birth, phone_number, gender,  address , my_point ) VALUES (?, ?, ?, ?, ?, ?,?,?);`,
-    //         [
-    //             data.name,
-    //             data.password,
-    //             data.email,
-    //             data.birth,
-    //             data.phone_number,
-    //             data.gender,
-    //             data.address,
-    //             data.my_point,
-    //         ]
-    //     );
-
-    //     return result.insertId;
-    // } catch (err) {
-    //     throw new Error(
-    //         `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
-    //     );
-    // } finally {
-    //     conn.release();
-    // }
+    const created = await prisma.user.create({
+        data: {
+            name: data.name,
+            password: data.password,
+            email: data.email,
+            birth: data.birth,
+            phoneNumber: data.phoneNumber,
+            gender: data.gender,
+            address: data.address,
+            myPoint: data.myPoint,
+        },
+    });
+    return created.id;
 };
 
 // 사용자 정보 얻기
 export const getUser = async (userId) => {
-    const conn = await pool.getConnection();
-
-    try {
-        const [user] = await pool.query(
-            `SELECT * FROM user WHERE id = ?;`,
-            userId
-        );
-
-        console.log(user);
-
-        if (user.length == 0) {
-            return null;
-        }
-
-        return user;
-    } catch (err) {
-        throw new Error(
-            `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
-        );
-    } finally {
-        conn.release();
+    const user = await prisma.user.findFirst({
+        where: {
+            id: userId,
+        },
+    });
+    if (!user) {
+        return null;
     }
+    return Number(user.id);
 };
 
 // 음식 선호 카테고리 매핑
 export const setPreference = async (userId, foodCategoryId) => {
-    const conn = await pool.getConnection();
-
-    try {
-        await pool.query(
-            `INSERT INTO user_category (user_id,category_id ) VALUES (?, ?);`,
-            [userId, foodCategoryId]
-        );
-
-        return;
-    } catch (err) {
-        throw new Error(
-            `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
-        );
-    } finally {
-        conn.release();
+    // const findUserId = await prisma.user_category.findFirst({
+    //     where: {
+    //         user_id: userId,
+    //     },
+    // });
+    // if (findUserId) {
+    //     const patchUserCategory = await prisma.user_category.update({
+    //         where: {
+    //             user_id: userId,
+    //         },
+    //         data: {
+    //             user_id: userId,
+    //             category_id: foodCategoryId,
+    //         },
+    //     });
+    //     return patchUserCategory.id;
+    // } else {
+    console.log(foodCategoryId);
+    const userPreference = await prisma.user_category.create({
+        data: {
+            user_id: userId,
+            category_id: foodCategoryId,
+        },
+    });
+    console.log("userPreference", userPreference);
+    if (!userPreference) {
+        return null;
     }
+    return userPreference.id;
 };
 
 // 사용자 선호 카테고리 반환
 export const getUserPreferencesByUserId = async (userId) => {
-    const conn = await pool.getConnection();
-
-    try {
-        const [preferences] = await pool.query(
-            "SELECT ufc.id, ufc.category_id, ufc.user_id, fcl.kind " +
-                "FROM user_category ufc JOIN category fcl on ufc.category_id = fcl.id " +
-                "WHERE ufc.user_id = ? ORDER BY ufc.category_id ASC;",
-            userId
-        );
-
-        return preferences;
-    } catch (err) {
-        throw new Error(
-            `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
-        );
-    } finally {
-        conn.release();
-    }
+    // const conn = await pool.getConnection();
+    const preferences = await prisma.user_category.findMany({
+        where: { user_id: userId },
+        select: {
+            id: true,
+            category_id: true,
+            user_id: true,
+            category: {
+                select: {
+                    kind: true,
+                },
+            },
+        },
+    });
+    const convertPreferences = convertBigIntToString(preferences);
+    return convertPreferences;
 };
