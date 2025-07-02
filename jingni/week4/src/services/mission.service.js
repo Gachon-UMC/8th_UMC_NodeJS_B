@@ -79,11 +79,7 @@ export const completeMission = async (data) => {
     }
 
     mission = await getDoMissionFromDB(data.mission_id);
-    if(!mission){
-        throw new StatusError("도전중인 미션이 아닙니다.", data);
-    }
-
-    if(!await checkStatusFromDB(data, 1)){
+    if(!mission || !await checkStatusFromDB(data, 1)){
         throw new StatusError("도전중인 미션이 아닙니다.", data);
     }
 
