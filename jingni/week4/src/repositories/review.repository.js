@@ -1,5 +1,16 @@
 import { prisma } from "../db.config.js";
 
+const reviewSelect = {
+  id: true,
+  content: true,
+  rating: true,
+  title: true,
+  storeId: true,
+  userId: true,
+  store: true,
+  user: true,
+};
+
 
 export const addReviewToDB = async (data) => {
 
@@ -32,16 +43,7 @@ export const getReviewFromDB = async (reviewId) => {
 export const getAllReviewsFromDB = async (storeId, cursor) => {
     
     const reviews = await prisma.review.findMany({
-      select: {
-        id: true,
-        content: true,
-        rating: true,
-        title: true,
-        storeId: true,
-        userId: true,
-        store: true,
-        user: true,
-      },
+      select: reviewSelect,
       where: { 
         storeId: storeId, 
         id: { 
@@ -58,16 +60,7 @@ export const getAllReviewsFromDB = async (storeId, cursor) => {
 export const getAllMyReviewsFromDB = async (userId, cursor) => {
 
   const reviews = await prisma.review.findMany({
-    select: {
-      id: true,
-      content: true,
-      rating: true,
-      title: true,
-      storeId: true,
-      userId: true,
-      store: true,
-      user: true,
-    },
+    select: reviewSelect,
     where: { 
       userId: userId, 
       id: { 
